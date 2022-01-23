@@ -1,0 +1,40 @@
+
+Requests grouped by title and split over 12 months before requested month, for funder 'Leverhulme Trust' 
+https://oapen-stats.trilobiet.eu/api/eventcount-per-item?month=2021-12&funder-id=288fb6b7-e23c-43d3-9a84-ad058a42edb5
+
+Requests grouped by country and split over 12 months before requested month, for funder 'Leverhulme Trust' 
+https://oapen-stats.trilobiet.eu/api/eventcount-per-country?month=2021-12&funder-id=288fb6b7-e23c-43d3-9a84-ad058a42edb5
+
+-----------------------------------------------
+
+Requests grouped by location, for period 2021-01 to 2021-12 for funder 'Leverhulme Trust' 
+https://oapen-stats.trilobiet.eu/api/events-per-funder?funder-id=288fb6b7-e23c-43d3-9a84-ad058a42edb5&startmonth=2021-01&endmonth=2021-12&precision=1
+
+Requests grouped by location, for period 2021-01 to 2021-12 for publisher 'Edinburgh University Press' 
+https://oapen-stats.trilobiet.eu/api/events-per-publisher?publisher-id=2a191404-86cd-479e-afc8-ff2b8d611a94&startmonth=2021-01&endmonth=2021-12&precision=1
+
+Requests grouped by location, for period 2021-01 to 2021-12 for an area with center point Rotterdam and radius 50 km
+https://oapen-stats.trilobiet.eu/api/events-per-region?startmonth=2021-01&endmonth=2021-12&latitude=51.926517&longitude=4.462456&radius=50&precision=1
+
+-----------------------------------------------
+
+All publishers
+https://oapen-stats.trilobiet.eu/api/publishers
+
+All publishers for funder 'Austrian Science Fund'
+https://oapen-stats.trilobiet.eu/api/publishers?funder-id=26ae1657-c58f-4f1d-a392-585ee75c293e
+
+All funders
+https://oapen-stats.trilobiet.eu/api/funders
+
+All funders for publisher 'Academia Press'
+https://oapen-stats.trilobiet.eu/api/funders?publisher-id=76cb5309-2a30-44e7-bc8c-7892cd1fa38c
+
+All months with data
+https://oapen-stats.trilobiet.eu/api/months
+
+All item types
+https://oapen-stats.trilobiet.eu/api/itemtypes
+
+All countries with data
+https://oapen-stats.trilobiet.eu/api/countries

@@ -1,0 +1,4 @@
+
+Stop running application!
+
+mvn install -Pprod
