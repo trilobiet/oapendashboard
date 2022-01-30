@@ -19,7 +19,7 @@ public class AppConfig {
 		return new EventRepository();
 	}
 	
-	@Bean 
+	@Bean
 	public ItemRepository itemRepository() {
 		return new ItemRepository();
 	}
