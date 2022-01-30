@@ -1,6 +1,7 @@
 package org.oapen.dashboard.config;
 
 import org.oapen.dashboard.api.repository.EventRepository;
+import org.oapen.dashboard.api.repository.ItemRepository;
 import org.oapen.dashboard.api.repository.LookupRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,5 +19,9 @@ public class AppConfig {
 		return new EventRepository();
 	}
 	
+	@Bean
+	public ItemRepository itemRepository() {
+		return new ItemRepository();
+	}
 	
 }
