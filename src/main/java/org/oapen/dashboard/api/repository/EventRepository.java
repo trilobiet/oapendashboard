@@ -30,8 +30,8 @@ public class EventRepository {
 					
 					args.getPublisherIds(),
 					args.getFunderIds(),
-					args.getItemId(),
 					args.getItemType(),
+					args.getItemId(),
 					
 					args.getCountryCode(),
 					args.getLatitude(),
@@ -55,8 +55,8 @@ public class EventRepository {
 				args.getPublisherIds(),
 				args.getFunderIds(),
 				
-				args.getItemId(),
-				args.getItemType()
+				args.getItemType(),
+				args.getItemId()
 			}
 		);
 		
@@ -65,10 +65,10 @@ public class EventRepository {
 	
 	
     @Cacheable(value="eventCountPerItemCache", key="#args")
-	public List<EventMonthlyCountsPerItemRow> getEventCountPerItem(EventMonthlyCountsPerItemArguments args) {
+	public List<EventMonthlyCountsPerItemRow> getEventCountPerItemForPublisherFunder(EventMonthlyCountsPerItemArguments args) {
 		
 		List<EventMonthlyCountsPerItemRow> lst = jdbcTemplate.query(
-			"call month_totals_per_item(?,?,?, ?,?,?, ?,?,?)", 
+			"call month_totals_per_item_for_pubfun(?,?,?, ?,?,?)", 
 			new EventMonthlyCountsPerItemRowMapper(),
 			new Object[] {
 				args.getMonth().atDay(1), 
@@ -76,17 +76,62 @@ public class EventRepository {
 				args.getFunderIds(), 
 				
 				args.getCountryCode(), 
-				args.getItemId(), 
 				args.getItemType(),
-				
-				args.getLatitude(),
-				args.getLongitude(),
-				args.getRadius()	
+				args.getItemId() 
 			}
 		);
 		
 		return lst;
 	}
 
+    
+    @Cacheable(value="eventCountPerItemCache", key="#args")
+	public List<EventMonthlyCountsPerItemRow> getEventCountPerItemForLibrary(EventMonthlyCountsPerItemArguments args) {
+		
+		List<EventMonthlyCountsPerItemRow> lst = jdbcTemplate.query(
+			"call month_totals_per_item_for_library(?,?, ?,?, ?,?)", 
+			new EventMonthlyCountsPerItemRowMapper(),
+			new Object[] {
+					
+				args.getMonth().atDay(1),
+				args.getLibraryId(),
+				
+				args.getPublisherIds(),
+				args.getFunderIds(), 
+				
+				args.getItemType(),
+				args.getItemId() 
+			}
+		);
+		
+		return lst;
+	}
+
+    
+    @Cacheable(value="eventCountPerItemCache", key="#args")
+	public List<EventMonthlyCountsPerItemRow> getEventCountPerItemForRegion(EventMonthlyCountsPerItemArguments args) {
+		
+		List<EventMonthlyCountsPerItemRow> lst = jdbcTemplate.query(
+			"call month_totals_per_item_for_region(?,?,?,?, ?,?, ?,?)", 
+			new EventMonthlyCountsPerItemRowMapper(),
+			new Object[] {
+					
+				args.getMonth().atDay(1),
+				args.getLatitude(),
+				args.getLongitude(),
+				args.getRadius(),
+				
+				args.getPublisherIds(),
+				args.getFunderIds(), 
+				
+				args.getItemType(),
+				args.getItemId() 
+			}
+		);
+		
+		return lst;
+	}
+    
+    
 	
 }

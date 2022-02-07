@@ -60,7 +60,7 @@ public class EventController {
     }
     
 
-    @GetMapping("/eventcount-per-item")
+    @GetMapping("/eventcount-per-item-publisherfunder")
     public List<EventMonthlyCountsPerItemRow> eventCountPerItem(
     	@Schema(type = "string", format = "yearmonth", example = "2021-12") // swagger doc annotation
     	@RequestParam(required=true) @DateTimeFormat(pattern = "yyyy-MM") @ValidYearMonth YearMonth month,
@@ -68,10 +68,7 @@ public class EventController {
     	@RequestParam(required=false,name="funder-id") Optional<String> funderId,
     	@RequestParam(required=false,name="country-code") Optional<String> countryCode,
     	@RequestParam(required=false,name="item-id") Optional<String> itemId,
-    	@RequestParam(required=false,name="item-type") Optional<String> itemType,
-    	@RequestParam(required=false) Optional<Double> latitude,
-    	@RequestParam(required=false) Optional<Double> longitude,
-    	@RequestParam(required=false) Optional<Integer> radius
+    	@RequestParam(required=false,name="item-type") Optional<String> itemType
     ) {
     	
     	EventMonthlyCountsPerItemArgumentsBuilder args = 
@@ -82,12 +79,62 @@ public class EventController {
     	if (countryCode.isPresent()) args.countryCode(countryCode.get());
     	if (itemId.isPresent()) args.itemId(itemId.get());
     	if (itemType.isPresent()) args.itemType(itemType.get());
-    	if (latitude.isPresent()) args.latitude(latitude.get());
-    	if (longitude.isPresent()) args.longitude(longitude.get());
-    	if (radius.isPresent()) args.radius(radius.get());
     	
-    	return eventRepository.getEventCountPerItem(args.build());
+    	return eventRepository.getEventCountPerItemForPublisherFunder(args.build());
     }
+    
+
+    
+    @GetMapping("/eventcount-per-item-library")
+    public List<EventMonthlyCountsPerItemRow> eventCountPerItemForLibrary(
+    	@Schema(type = "string", format = "yearmonth", example = "2021-12") // swagger doc annotation
+    	@RequestParam(required=true) @DateTimeFormat(pattern = "yyyy-MM") @ValidYearMonth YearMonth month,
+    	@RequestParam(required=true,name="library-id") String libraryId,
+    	@RequestParam(required=false,name="publisher-id") Optional<String> publisherId,
+    	@RequestParam(required=false,name="funder-id") Optional<String> funderId,
+    	@RequestParam(required=false,name="item-id") Optional<String> itemId,
+    	@RequestParam(required=false,name="item-type") Optional<String> itemType
+    ) {
+    	
+    	EventMonthlyCountsPerItemArgumentsBuilder args = 
+    		EventMonthlyCountsPerItemArguments.builder()
+    			.month(month).libraryId(libraryId);
+    	
+    	if (publisherId.isPresent()) args.publisherIds(publisherId.get());
+    	if (funderId.isPresent()) args.funderIds(funderId.get());
+    	if (itemId.isPresent()) args.itemId(itemId.get());
+    	if (itemType.isPresent()) args.itemType(itemType.get());
+    	
+    	return eventRepository.getEventCountPerItemForLibrary(args.build());
+    }
+    
+    
+    
+    @GetMapping("/eventcount-per-item-region")
+    public List<EventMonthlyCountsPerItemRow> eventCountPerItemForRegion(
+    	@Schema(type = "string", format = "yearmonth", example = "2021-12") // swagger doc annotation
+    	@RequestParam(required=true) @DateTimeFormat(pattern = "yyyy-MM") @ValidYearMonth YearMonth month,
+    	@RequestParam(required=true) Double latitude,
+    	@RequestParam(required=true) Double longitude,
+    	@RequestParam(required=true) Integer radius,
+    	@RequestParam(required=false,name="publisher-id") Optional<String> publisherId,
+    	@RequestParam(required=false,name="funder-id") Optional<String> funderId,
+    	@RequestParam(required=false,name="item-id") Optional<String> itemId,
+    	@RequestParam(required=false,name="item-type") Optional<String> itemType
+    ) {
+    	
+    	EventMonthlyCountsPerItemArgumentsBuilder args = 
+    		EventMonthlyCountsPerItemArguments.builder()
+    			.month(month).latitude(latitude).longitude(longitude).radius(radius);
+    	
+    	if (publisherId.isPresent()) args.publisherIds(publisherId.get());
+    	if (funderId.isPresent()) args.funderIds(funderId.get());
+    	if (itemId.isPresent()) args.itemId(itemId.get());
+    	if (itemType.isPresent()) args.itemType(itemType.get());
+    	
+    	return eventRepository.getEventCountPerItemForRegion(args.build());
+    }
+    
     
     
     /*

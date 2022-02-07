@@ -15,6 +15,7 @@ public class EventMonthlyCountsPerItemArguments implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private final YearMonth month;
+	private final String libraryId;
 	private final String publisherIds;
 	private final String funderIds;
 	private final String countryCode;

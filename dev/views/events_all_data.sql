@@ -1,29 +1,33 @@
-CREATE VIEW `events_all_data` AS
-select  
-    event.ip as ip,
-    event.date as date,
-    event.country as country,
-    event.country_code as country_code,
-    event.city as city,
-    event.longitude as longitude,
-    event.latitude as latitude,
-    event.requests as requests,
-    item.id as item_id,
-    item.title as title,
-    item.publisher_id as publisher_id,
-    item.publisher_name as publisher_name,
-    item.authors as authors,
-    item.doi as doi,
-    item.isbn as isbn,
-    item.type as type,
-    item.year as year,
-    item.grant_number as grant_number,
-    item.grant_program as grant_program,
-    funder.id as funder_id,
-    funder.name as funder_name
-from
-	event 
-		inner join item on event.item_id = item.id
-		left join (
-			item_funder inner join funder on item_funder.funder_id = funder.id    
-		) on item_funder.item_id = item.id 
+CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = `trilobiet`@`localhost` 
+    SQL SECURITY DEFINER
+VIEW `events_all_data` AS
+    SELECT 
+        `event`.`ip` AS `ip`,
+        `event`.`date` AS `date`,
+        `event`.`country` AS `country`,
+        `event`.`country_code` AS `country_code`,
+        `event`.`city` AS `city`,
+        `event`.`longitude` AS `longitude`,
+        `event`.`latitude` AS `latitude`,
+        `event`.`requests` AS `requests`,
+        `event`.`inetAton` AS `inetAton`,
+        `item`.`id` AS `item_id`,
+        `item`.`title` AS `title`,
+        `item`.`publisher_id` AS `publisher_id`,
+        `item`.`publisher_name` AS `publisher_name`,
+        `item`.`authors` AS `authors`,
+        `item`.`doi` AS `doi`,
+        `item`.`isbn` AS `isbn`,
+        `item`.`type` AS `type`,
+        `item`.`year` AS `year`,
+        `item`.`grant_number` AS `grant_number`,
+        `item`.`grant_program` AS `grant_program`,
+        `funder`.`id` AS `funder_id`,
+        `funder`.`name` AS `funder_name`
+    FROM
+        ((`event`
+        JOIN `item` ON ((`event`.`item_id` = `item`.`id`)))
+        LEFT JOIN (`item_funder`
+        JOIN `funder` ON ((`item_funder`.`funder_id` = `funder`.`id`))) ON ((`item_funder`.`item_id` = `item`.`id`)))
