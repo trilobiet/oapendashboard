@@ -6,8 +6,9 @@
       :user="this.$store.getters.getUser" />
     <publisher v-else-if="this.user.role=='publisher'" 
       :user="this.$store.getters.getUser" />
-    <library v-else 
+    <library v-else-if="this.user.role=='library'" 
       :user="this.$store.getters.getUser" />
+    <div v-else>No valid user</div>
 
   </div>  
          

@@ -12,17 +12,20 @@
       <v-navigation-drawer v-model="drawer" absolute temporary>
 
           <v-list dense>
-          
-              <v-subheader>LIBRARY DOWNLOADS REPORTS</v-subheader>
+
+              <v-subheader>
+                Number of Successful Title Requests<br/>
+                Per Month and Title:
+              </v-subheader>
           
               <v-list-item v-on:click="setSheet('downloadsPerTitleLibrary')">
                 <v-list-item-icon><v-icon>mdi-library</v-icon></v-list-item-icon>
-                <v-list-item-content><v-list-item-title>For library</v-list-item-title></v-list-item-content>
+                <v-list-item-content><v-list-item-title>For Library</v-list-item-title></v-list-item-content>
               </v-list-item>
           
               <v-list-item v-on:click="setSheet('downloadsPerTitleRegion')">
                 <v-list-item-icon><v-icon>mdi-chart-bubble</v-icon></v-list-item-icon>
-                <v-list-item-content><v-list-item-title>For region</v-list-item-title></v-list-item-content>
+                <v-list-item-content><v-list-item-title>For Region</v-list-item-title></v-list-item-content>
               </v-list-item>
 
           </v-list>

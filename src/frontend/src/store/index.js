@@ -1,5 +1,8 @@
+
 import Vue from 'vue';
 import Vuex from 'vuex';
+import axios from 'axios';
+import createPersistedState from 'vuex-persistedstate';
 
 Vue.use(Vuex);
 
@@ -14,28 +17,33 @@ export default new Vuex.Store({
         funders: [],
         publishers: [],
         months: [],
-        lastRequestableMonth: ''
+        lastRequestableMonth: '',
+        figuren: []
     },
     mutations: {
 
+        clearUser(state) {
+            state.user = null;
+        },
+
         setUser(state,payload) {
             state.user = payload
-            this.dispatch("loadPublishers",state.user.id)
-            this.dispatch("loadFunders",state.user.id)
-            console.log("USER: " + JSON.stringify(state.user))
+            this.dispatch("loadPublishers",state.user) // preload publishers for this user
+            this.dispatch("loadFunders",state.user) // preload funders for this user
+            console.log("SET USER: " + JSON.stringify(state.user)) 
         },
 
         setFunders(state,payload) {
             const ar = [{"id":"",name:"All funders"}] // empty first
             // load funders for this publisher
-            if (state.user.role=='publisher') for (const obj of payload) ar.push(obj)
+            if (state.user.role!='funder') for (const obj of payload) ar.push(obj)
             state.funders = ar
         },
 
         setPublishers(state,payload) {
             const ar = [{"id":"",name:"All publishers"}] // empty first
             // load publishers for this funder
-            if (state.user.role=='funder') for (const obj of payload) ar.push(obj)
+            if (state.user.role!='publisher') for (const obj of payload) ar.push(obj)
             state.publishers = ar
         },
 
@@ -66,13 +74,31 @@ export default new Vuex.Store({
     actions: {
 
         async loadFunders(context) {
-           const r = await fetch('/api/funders?publisher-id='+context.state.user.irusId)
-           this.commit("setFunders", await r.json())     
+            
+            const u = context.state.user; 
+
+            if (u.role == 'publisher') { 
+                const r = await axios('/api/funders?publisher-id='+u.irusId)
+                this.commit("setFunders", await r.data)     
+            }    
+            else if (u.role == 'library') {
+                const r = await axios('/api/funders')
+                this.commit("setFunders", await r.data)     
+            }
         },
 
         async loadPublishers(context) {
-            const r = await fetch('/api/publishers?funder-id='+context.state.user.irusId)
-            this.commit("setPublishers", await r.json())     
+
+            const u = context.state.user; 
+
+            if (u.role == 'funder') { 
+                const r = await axios.get('/api/publishers?funder-id='+u.irusId)
+                this.commit("setPublishers", r.data)
+            }         
+            else if (u.role == 'library') {
+                const r = await axios.get('/api/publishers');
+                this.commit("setPublishers", r.data)     
+            }
         }
     },
     getters: {
@@ -105,5 +131,8 @@ export default new Vuex.Store({
            return state.lastRequestableMonth;
         },
           
-    }
-})
+    },
+
+    plugins: [createPersistedState()]
+
+});

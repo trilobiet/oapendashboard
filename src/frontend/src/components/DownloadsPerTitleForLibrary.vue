@@ -4,38 +4,49 @@
     <v-row class="text-center">
       <v-col md="2">
           <v-select value v-model="currentMonth" :items="this.$store.getters.getMonths" 
-              label="Month" />
+              label="End Month" />
       </v-col>
       <v-col md="2">
-          <v-select v-model="currentFunderFilter" return-object :items="this.$store.getters.getFunders" 
+          <v-autocomplete v-model="currentFunderFilter" return-object :items="this.$store.getters.getFunders" 
               item-text="name" item-value="id" label="Funder" />
       </v-col>
       <v-col md="2">
-          <v-select v-model="currentPublisherFilter" return-object :items="this.$store.getters.getPublishers" 
+          <v-autocomplete v-model="currentPublisherFilter" return-object :items="this.$store.getters.getPublishers" 
               item-text="name" item-value="id" label="Publisher" />
       </v-col>
       <v-col md="2">
           <v-select v-model="currentItemType" return-object :items="this.$store.getters.getItemTypes" 
               item-text="text" item-value="value" label="Item type" />
       </v-col>
-      <!--
-      <v-col md="2">
-          <v-text-field v-model="currentItemId" label="Item ids"></v-text-field>
-      </v-col> -->
+
+      <v-spacer/>
+      <v-col md="2" class="text-right">
+
+          <vue-json-to-csv :json-data="$func.flattenJsonArray(this.items)" csv-title="monthly_requests_for_library">
+            <v-btn color="blue-grey" class="ma-3 white--text">
+              Download
+              <v-icon right dark>mdi-table-arrow-down</v-icon>
+            </v-btn>
+          </vue-json-to-csv>
+
+      </v-col>
+      
     </v-row>    
   </v-container>
+
   <v-container>
     <v-row class="text-center">
       <v-col cols="12">
-        <my-data-table :headers="headers" :items="items" :overlay="overlay" />
+        <my-data-table :headers="headers" :items="items" :loading="loading" :report-title="reportTitle"/>
       </v-col>
     </v-row>
   </v-container>
+
 </div>  
 </template>
 
 <script>
-
+import axios from 'axios';
 import MyDataTable from '@/components/MyDataTable.vue';
 
 export default {
@@ -47,15 +58,16 @@ export default {
   
   data() {
     return {
-      overlay: true,
+      loading: true,
       usertype: '',
       headers: [],
       items: [], 
       currentMonth: this.$store.getters.getLastRequestableMonth,
-      currentItemType: this.$store.getters.getItemTypes[0],
-      currentFunderFilter: this.$store.getters.getFunders[0],
-      currentPublisherFilter: this.$store.getters.getPublishers[0],
-      currentItemId: ''
+      currentItemType: "",
+      currentFunderFilter: {name:"",id:""},
+      currentPublisherFilter: {name:"",id:""},
+      currentItemId: '',
+      reportTitle: 'Number of Successful Title Requests per Month and Title for Library',
     }    
   },
   
@@ -75,18 +87,14 @@ export default {
     
     callApi() {
 
-      this.overlay = true; // visual darkening while loading  
-      fetch(`/api/eventcount-per-item-library?${this.getRequestString()}`)
-      .then(r => r.json())
-      .then(json => {
-         this.items=json;
-         this.headers=this.getHeaders(json);
+      this.loading = true; // visual darkening while loading  
+      axios.get(`/api/eventcount-per-item-library?${this.getRequestString()}`)
+      .then(resp => {
+         this.items=resp.data;
+         this.headers=this.getHeaders(resp.data);
       })
-      .catch(error => {
-        console.log("One hell of an error.")
-        console.log(error)
-      })
-      .finally(() => this.overlay = false )
+      .catch(error => console.log(error))
+      .finally(() => this.loading = false )
     },
     
     getHeaders(json) {
@@ -94,7 +102,7 @@ export default {
       let arr = [
         { text: "OAPEN link", value: "id" },
         { text: "Isbn", value: "isbn" },
-        { text: "Title", value: "title" },
+        { text: "Title", value: "title", cellClass: "td-title" },
         { text: "Doi", value: "doi" },
         { text: "Publisher", value: "publisherName" },
         { text: "Funding", value: "funders" },
@@ -119,11 +127,12 @@ export default {
       if(this.currentFunderFilter.id) s += '&funder-id=' + this.currentFunderFilter.id
       if(this.currentPublisherFilter.id) s += '&publisher-id=' + this.currentPublisherFilter.id
       if(this.currentItemId) s += '&item-id=' + this.currentItemId
-       console.log("RequestString: " + s)
+      // console.log("RequestString: " + s)
       return s;
     },
 
   }
 
 }; 
+
 </script>

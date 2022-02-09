@@ -7,7 +7,6 @@
       color="#2c84bf" 
       dark 
     >
-
       <div class="d-flex align-center">
         <v-img
           alt="Vuetify Logo"
@@ -36,6 +35,17 @@
           <v-list-item to="/about">
             <v-list-item-title>About</v-list-item-title>
           </v-list-item>
+          <v-list-item v-if="isLoggedIn" to="/dashboard">
+            <v-list-item-title>Dashboard</v-list-item-title>
+          </v-list-item>
+
+          <v-divider></v-divider>
+
+          <v-list-item to="/login">
+            <v-list-item-title v-if="isLoggedIn">Log out</v-list-item-title>
+            <v-list-item-title v-else>Log in</v-list-item-title>
+          </v-list-item>
+
         </v-list>
 
       </v-menu>  
@@ -64,7 +74,7 @@ export default {
       return (this.$vuetify.theme.dark) ? 'dark' : 'light'
     },
     isLoggedIn(){
-      return this.$store.getters.getRelType != ''
+      return this.$store.getters.getUser 
     },
     relType(){
       return this.$store.getters.getRelType
@@ -79,11 +89,10 @@ export default {
   .v-data-table {
 
     th {
-      
       background:#f4f2f6;
       white-space: nowrap;
-      max-width: 15em;
-      overflow: hidden;
+      max-width: 25em;
+      //overflow: hidden;
       border-bottom: none !important;
       span {
         text-overflow: ellipsis;
@@ -94,6 +103,9 @@ export default {
       max-width: 15em;
       overflow: hidden;
       text-overflow: ellipsis;
+      &.td-title {
+         max-width: 25em; 
+      }
     }
   }
 

@@ -1,19 +1,23 @@
 <template>
 
-    <v-card>
+    <v-card class="elevation-5">
         <v-card-title>
-        <v-text-field
-            v-model="tableSearch"
-            append-icon="mdi-magnify"
-            label="Search"
-            single-line 
-            hide-details></v-text-field>
-        </v-card-title> 
-        <v-data-table :search="tableSearch" :headers="headers" :items="items"/>
-        <v-overlay opacity=".4" :value="overlay" absolute>
-            <v-progress-circular :size="50" color="#ccc" indeterminate></v-progress-circular>
-            <br/>Loading... please wait
-        </v-overlay>
+          {{reportTitle}}
+        </v-card-title>
+        <v-card-subtitle>
+          <v-text-field
+              v-model="tableSearch"
+              append-icon="mdi-magnify"
+              label="Search"
+              single-line 
+              hide-details></v-text-field>
+        </v-card-subtitle>  
+        <v-card-text> 
+          <v-data-table 
+            :loading="loading" :loading-text="loadingText" :search="tableSearch" 
+            :headers="headers" :items="items"   
+            calculate-widths />
+        </v-card-text>
     </v-card>    
 
 </template>
@@ -26,12 +30,14 @@ export default {
   props: {
     headers: {type: Array},
     items: {type: Array},     
-    overlay: {type: Boolean, default: true},
+    loading: {type: Boolean, default: false},
+    reportTitle: {type: String}
   },
 
   data() {
     return {
       tableSearch: '',
+      loadingText: 'Loading... \n(Preparing new reports may take up to a few minutes)'
     }
   }  
 }

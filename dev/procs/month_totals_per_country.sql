@@ -16,7 +16,7 @@ BEGIN
     set yearBefore = date_sub(fromMonth, INTERVAL 12 MONTH);
     
 	select 
-		  country, date_format(fromMonth,"%Y-%m") as month
+		  country_code, any_value(country) as country, date_format(fromMonth,"%Y-%m") as month
 		, sum( case when date <= date_sub(fromMonth, INTERVAL 0 MONTH) and date >= date_sub(fromMonth, INTERVAL 11 MONTH) then mtot else null end ) total
 		, sum( case when date=date_sub(fromMonth, INTERVAL 0 MONTH) then mtot else 0 end ) month_0
 		, sum( case when date=date_sub(fromMonth, INTERVAL 1 MONTH) then mtot else 0 end ) month_1
@@ -31,7 +31,8 @@ BEGIN
 		, sum( case when date=date_sub(fromMonth, INTERVAL 10 MONTH) then mtot else 0 end ) month_10
 		, sum( case when date=date_sub(fromMonth, INTERVAL 11 MONTH) then mtot else 0 end ) month_11
 	from (
-		select date, country, sum(requests) as mtot
+		/* Choose any_value since we do not want to group on country */
+		select date, country_code, any_value(country) as country, sum(requests) as mtot
 		from item join event on item.id = event.item_id
 		left join (
 			item_funder inner join funder on item_funder.funder_id = funder.id    
@@ -42,10 +43,10 @@ BEGIN
 			and if( publisherIds is null or length(trim(publisherIds)) = 0, true, FIND_IN_SET(publisher_id, publisherIds) )
             and if( funderIds is null or length(trim(funderIds)) = 0, true, FIND_IN_SET(funder_id, funderIds) )
             and if( itemType is null or length(trim(itemType)) = 0, true, item.type = itemType )
-		group by date, country
+		group by date, country_code
 	) tmp
-	group by country
+	group by country_code
     having total is not null
-	order by total desc, country;
+	order by total desc, country_code;
     
 END

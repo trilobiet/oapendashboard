@@ -4,7 +4,7 @@
     <v-row class="text-center">
       <v-col md="2">
           <v-select value v-model="currentMonth" :items="this.$store.getters.getMonths" 
-              label="Month" />
+              label="End Month" />
       </v-col>
       <v-col md="2" v-if="relType=='publisher'">
           <v-select v-model="currentFunderFilter" return-object :items="this.$store.getters.getFunders" 
@@ -18,12 +18,25 @@
           <v-select v-model="currentItemType" return-object :items="this.$store.getters.getItemTypes" 
               item-text="text" item-value="value" label="Item type" />
       </v-col>
+
+      <v-spacer/>
+      <v-col md="2" class="text-right">
+
+          <vue-json-to-csv :json-data="$func.flattenJsonArray(this.items)" csv-title="monthly_requests_per_country">
+            <v-btn color="blue-grey" class="ma-3 white--text">
+              Download
+              <v-icon right dark>mdi-table-arrow-down</v-icon>
+            </v-btn>
+          </vue-json-to-csv>
+
+      </v-col>
+
     </v-row>    
   </v-container>
   <v-container>
     <v-row class="text-center">
       <v-col cols="12">
-        <my-data-table :headers="headers" :items="items" :overlay="overlay" />
+        <my-data-table :headers="headers" :items="items" :loading="loading" :report-title="reportTitle" />
       </v-col>
     </v-row>
   </v-container>
@@ -31,6 +44,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 import MyDataTable from '@/components/MyDataTable.vue';
 
 export default {
@@ -44,13 +58,14 @@ export default {
   data() {
     return {
       usertype: '',
-      overlay: true,
+      loading: true,
       headers: [],
       items:[], 
       currentMonth: this.$store.getters.getLastRequestableMonth,
       currentItemType: this.$store.getters.getItemTypes[0],
       currentFunderFilter: this.$store.getters.getFunders[0],
       currentPublisherFilter: this.$store.getters.getPublishers[0],
+      reportTitle: "Number of Successful Title Requests by Month and Country"
     }    
   },
   
@@ -69,21 +84,21 @@ export default {
 
     callApi() {
         
-      this.overlay = true;  
-      fetch(`/api/eventcount-per-country?${this.getRequestString()}`)
-      .then(r => r.json())
-      .then(json => {
-         this.items=json;
-         this.headers=this.getHeaders(json);
+      this.loading = true;  
+      axios.get(`/api/eventcount-per-country?${this.getRequestString()}`)
+      .then(resp => {
+         this.items=resp.data;
+         this.headers=this.getHeaders(resp.data);
       })
       .catch(error => {console.log(error)})
-      .finally(() => this.overlay = false )
+      .finally(() => this.loading = false )
     },
     
     getHeaders(json) {
 
       let arr = [
         { text: "Country", value: "country" },
+        { text: "Code", value: "countryCode" },
         { text: "Total", value: "total", align: "right" }
       ];
 

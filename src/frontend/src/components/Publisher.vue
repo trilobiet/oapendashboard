@@ -13,16 +13,16 @@
 
           <v-list dense>
           
-              <v-subheader>MONTHLY DOWNLOADS REPORTS</v-subheader>
+              <v-subheader>Number of Successful title requests</v-subheader>
           
               <v-list-item v-on:click="setSheet('downloadsPerTitle')">
                 <v-list-item-icon><v-icon>mdi-book-open-page-variant-outline</v-icon></v-list-item-icon>
-                <v-list-item-content><v-list-item-title>Per title</v-list-item-title></v-list-item-content>
+                <v-list-item-content><v-list-item-title>Per Month and Title</v-list-item-title></v-list-item-content>
               </v-list-item>
           
               <v-list-item v-on:click="setSheet('downloadsPerCountry')">
                 <v-list-item-icon><v-icon>mdi-earth</v-icon></v-list-item-icon>
-                <v-list-item-content><v-list-item-title>Per country</v-list-item-title></v-list-item-content>
+                <v-list-item-content><v-list-item-title>Per Month and Country</v-list-item-title></v-list-item-content>
               </v-list-item>
           
           </v-list>

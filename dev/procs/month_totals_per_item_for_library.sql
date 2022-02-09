@@ -46,27 +46,26 @@ BEGIN
 			item.id as id,
             isbn, title, publisher_name, doi, type,
             group_concat(distinct funder.name) as funders,  
-			date, mtot 
-		from (
-			SELECT item_id, date, sum(requests) as mtot
-			FROM library_ips l join event ev on country_code = countryCode and library_id = libraryId
-			where date > yearBefore
+			date, sum(requests) as mtot 
+			FROM event ev 
+				join library_ips l on 
+					inetAton >= ip1a AND inetAton <= l.ip2a
+					#if( is_ipv4(ev.ip), inet_aton(ev.ip) >= ip1a AND inet_aton(ev.ip) <= l.ip2a, false ) 
+                join item on item_id = item.id 
+                left join (
+					item_funder inner join funder on item_funder.funder_id = funder.id    
+				) on item_funder.item_id = item.id 
+			where country_code = countryCode  
+            and library_id = libraryId
+            and date > yearBefore
 			and date <= fromMonth
-			and if( is_ipv4(ev.ip), inet_aton(ev.ip) >= ip1a AND inet_aton(ev.ip) <= l.ip2a, false ) 
-			group by date, item_id
-		) p
-		join item on item.id = p.item_id 
-        left join (
-			item_funder inner join funder on item_funder.funder_id = funder.id    
-		) on item_funder.item_id = item.id 
 
-        where true 
 			and if( itemIds is null, true, FIND_IN_SET(item.id, itemIds ) )
 			and if( publisherIds is null, true, FIND_IN_SET(publisher_id, publisherIds) )
 			and if( funderIds is null, true, FIND_IN_SET(funder_id, funderIds) )
             and if( itemType is null, true, item.type = itemType )
         
-        group by item.id, date
+			group by date, ev.item_id
 
 	) q
 	group by id
