@@ -1,7 +1,7 @@
 <template>
 <div>
   <v-container>
-    <v-row class="text-center">
+    <v-row>
       <v-col md="2">
           <v-select value v-model="currentMonth" :items="this.$store.getters.getMonths" 
               label="End Month" />
@@ -35,9 +35,9 @@
   </v-container>
 
   <v-container>
-    <v-row class="text-center">
+    <v-row>
       <v-col cols="12">
-        <my-data-table :headers="headers" :items="items" :loading="loading" :report-title="reportTitle"/>
+        <my-data-table :headers="headers" :items="items" :loading="loading" :report-title="reportTitle" />
       </v-col>
     </v-row>
   </v-container>
@@ -66,7 +66,7 @@ export default {
       currentItemType: "",
       currentFunderFilter: {name:"",id:""},
       currentPublisherFilter: {name:"",id:""},
-      currentItemId: '',
+      currentItemId: "",
       reportTitle: 'Number of Successful Title Requests per Month and Title for Library',
     }    
   },

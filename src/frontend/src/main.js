@@ -14,14 +14,22 @@ Vue.prototype.$func = globalfunctions
 
 Vue.config.productionTip = false
 
-//store.dispatch("setGlobals");
+// https://antoniandre.github.io/splitpanes/
+import { Splitpanes, Pane } from 'splitpanes'
+import 'splitpanes/dist/splitpanes.css'
+Vue.use(Splitpanes, Pane)
+Vue.component('splitpanes', Splitpanes)
+Vue.component('pane', Pane)
+
+
+import VueApexCharts from 'vue-apexcharts'
+Vue.use(VueApexCharts)
+Vue.component('apexchart', VueApexCharts)
 
 // TODO temporary 'login'
 // const userId = "b818ba9d-2dd9-4fd7-a364-7f305aef7ee9"; // funder
 // const userId = "df73bf94-b818-494c-a8dd-6775b0573bc2"; // publisher
 // const userId = "6145e100-82b1-11ec-a8a3-0242ac120002"; // library
-
-// TODO
 
 // Preload some api lookup data
 const promises = [
@@ -40,6 +48,7 @@ const promises = [
   axios.get('/api/itemtypes')
     .then(resp => store.commit("setItemTypes",resp.data)),
 ] 
+
 
 // Proceed when all promises have been fulfilled
 Promise.all(promises).then( () => {

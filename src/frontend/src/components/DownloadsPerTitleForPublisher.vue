@@ -1,7 +1,7 @@
 <template>
 <div>
   <v-container>
-    <v-row class="text-center">
+    <v-row>
       <v-col md="2">
           <v-select value v-model="currentMonth" :items="this.$store.getters.getMonths" 
               label="End Month" />
@@ -34,22 +34,34 @@
       
     </v-row>    
   </v-container>
+
   <v-container>
-    <v-row class="text-center">
+    <v-row>
       <v-col cols="12">
         <my-data-table :headers="headers" :items="items" :loading="loading" :report-title="reportTitle" />
       </v-col>
     </v-row>
   </v-container>
+
+  <v-container>
+    <v-row>
+        <v-col cols="12">
+          <stacked-bar-chart :rows="25" :items="items" categoriesField="title" 
+            title="Requests per Title" />
+        </v-col>  
+    </v-row>
+  </v-container>  
+
 </div>  
 </template>
 
 <script>
 import axios from 'axios';
 import MyDataTable from '@/components/MyDataTable.vue';
+import StackedBarChart from '@/components/charts/StackedBarChart.vue';
 
 export default {
-  components: { MyDataTable },
+  components: { MyDataTable, StackedBarChart },
   
   props: {
     relId: {type: String, default:''}
@@ -64,7 +76,7 @@ export default {
       currentCountry: {name:"",code:""},
       currentItemType: "",
       currentFunderFilter: {name:"",id:""},
-      reportTitle: "Number of Successful Title Requests by Month and Title"
+      reportTitle: "Number of Successful Title Requests per Month and Title"
     }    
   },
   

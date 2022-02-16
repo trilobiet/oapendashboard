@@ -1,7 +1,7 @@
 <template>
 <div>
   <v-container>
-    <v-row class="text-center">
+    <v-row>
       <v-col md="2">
           <v-select value v-model="currentMonth" :items="this.$store.getters.getMonths" 
               label="End Month" />
@@ -18,6 +18,9 @@
           <v-select v-model="currentItemType" return-object :items="this.$store.getters.getItemTypes" 
               item-text="text" item-value="value" label="Item type" />
       </v-col>
+      <v-col md="2">
+          <item-select v-model="currentItem" :relType="relType" :relId="relId" />
+      </v-col>
 
       <v-spacer/>
       <v-col md="2" class="text-right">
@@ -33,22 +36,48 @@
 
     </v-row>    
   </v-container>
+
   <v-container>
-    <v-row class="text-center">
+    <v-row>
+  
       <v-col cols="12">
-        <my-data-table :headers="headers" :items="items" :loading="loading" :report-title="reportTitle" />
+        <my-data-table :headers="headers" :items="items" :loading="loading" :report-title="reportTitle" :subTitle="subTitle" />
       </v-col>
+  
     </v-row>
   </v-container>
+
+  <v-container>
+    <v-row>
+        <v-col cols="12" >
+
+          <splitpanes>
+            <pane class="elevation-5">
+               <stacked-bar-chart :rows="25" :items="items" categoriesField="country"
+                title="Requests per Country" />
+            </pane>
+            <pane class="elevation-5">
+              <example4/><!-- THIS IS A TEST THIS IS A TEST THIS IS A TEST THIS IS A TEST THIS IS A TEST -->
+            </pane>
+          </splitpanes>
+
+
+        </v-col>  
+    </v-row>
+  </v-container>  
+
 </div>  
 </template>
 
 <script>
 import axios from 'axios';
 import MyDataTable from '@/components/MyDataTable.vue';
+import StackedBarChart from '@/components/charts/StackedBarChart.vue';
+import ItemSelect from './ItemSelect.vue';
+import Example4 from './charts/Example4.vue';
 
 export default {
-  components: { MyDataTable },
+  components: { MyDataTable, StackedBarChart, ItemSelect, Example4 },
   
   props: {
     relId: {type: String, default:''},
@@ -62,10 +91,12 @@ export default {
       headers: [],
       items:[], 
       currentMonth: this.$store.getters.getLastRequestableMonth,
-      currentItemType: this.$store.getters.getItemTypes[0],
-      currentFunderFilter: this.$store.getters.getFunders[0],
-      currentPublisherFilter: this.$store.getters.getPublishers[0],
-      reportTitle: "Number of Successful Title Requests by Month and Country"
+      currentItemType: "",
+      currentItem: {id:"", title:""},
+      currentFunderFilter: {name:"",id:""},
+      currentPublisherFilter: {name:"",id:""},
+      reportTitle: "Number of Successful Title Requests per Month and Country",
+      subTitle: ""
     }    
   },
   
@@ -76,6 +107,7 @@ export default {
   watch: {
      currentMonth:'callApi',
      currentItemType:'callApi',
+     currentItem: 'callApi',
      currentFunderFilter:'callApi',
      currentPublisherFilter:'callApi',
   },
@@ -83,12 +115,13 @@ export default {
   methods: {
 
     callApi() {
-        
+
       this.loading = true;  
       axios.get(`/api/eventcount-per-country?${this.getRequestString()}`)
       .then(resp => {
-         this.items=resp.data;
-         this.headers=this.getHeaders(resp.data);
+         this.items=resp.data
+         this.headers=this.getHeaders(resp.data)
+         this.subTitle = this.currentItem.title
       })
       .catch(error => {console.log(error)})
       .finally(() => this.loading = false )
@@ -121,6 +154,7 @@ export default {
       if(this.currentItemType.value) s += '&item-type=' + this.currentItemType.value
       if(this.currentFunderFilter.id) s += '&funder-id=' + this.currentFunderFilter.id
       if(this.currentPublisherFilter.id) s += '&publisher-id=' + this.currentPublisherFilter.id
+      if(this.currentItem.id) s+= '&item-id=' + this.currentItem.id
       // console.log("RequestString: " + s)
       return s
     }

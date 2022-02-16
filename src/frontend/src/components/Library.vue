@@ -9,7 +9,7 @@
           &nbsp;-&nbsp;{{user.role}}
       </v-toolbar>
      
-      <v-navigation-drawer v-model="drawer" absolute temporary>
+      <v-navigation-drawer v-model="drawer" fixed temporary>
 
           <v-list dense>
 
