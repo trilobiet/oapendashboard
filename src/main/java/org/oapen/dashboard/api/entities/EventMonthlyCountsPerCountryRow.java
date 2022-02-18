@@ -15,6 +15,7 @@ public class EventMonthlyCountsPerCountryRow implements Serializable {
 
 	private String country;
 	private String countryCode;
+	private Double latitude, longitude;
 	private YearMonth yearMonth;
 	private Map<YearMonth,Integer> monthTotals;
 	private Integer total;

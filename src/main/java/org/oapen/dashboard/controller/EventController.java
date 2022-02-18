@@ -39,7 +39,7 @@ public class EventController {
     private EventRepository eventRepository;
 	
     @GetMapping("/eventcount-per-country")
-    public List<EventMonthlyCountsPerCountryRow>	eventCountPerCountry(
+    public List<EventMonthlyCountsPerCountryRow> eventCountPerCountry(
     	@Schema(type = "string", format = "yearmonth", example = "2021-12") // swagger doc annotation	
     	@RequestParam(required=true) @DateTimeFormat(pattern = "yyyy-MM") @ValidYearMonth YearMonth month,
     	@RequestParam(required=false,name="publisher-id") Optional<String> publisherId,

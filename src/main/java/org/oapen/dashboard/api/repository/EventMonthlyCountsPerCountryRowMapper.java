@@ -16,6 +16,8 @@ public class EventMonthlyCountsPerCountryRowMapper implements MonthsRowMapper<Ev
 		
 		row.setCountry(rs.getString("country"));
 		row.setCountryCode(rs.getString("country_code"));
+		row.setLatitude(rs.getDouble("latitude"));
+		row.setLongitude(rs.getDouble("longitude"));
 		row.setYearMonth(YearMonth.parse(rs.getString("month")));
 		row.setTotal(rs.getInt("total"));
 		row.setMonthTotals(monthTotals(rs,ym));

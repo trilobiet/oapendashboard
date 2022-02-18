@@ -16,7 +16,7 @@ BEGIN
     set yearBefore = date_sub(fromMonth, INTERVAL 12 MONTH);
     
 	select 
-		  country_code, any_value(country) as country, date_format(fromMonth,"%Y-%m") as month
+		  tmp.country_code, any_value(tmp.country) as country, latitude, longitude, date_format(fromMonth,"%Y-%m") as month
 		, sum( case when date <= date_sub(fromMonth, INTERVAL 0 MONTH) and date >= date_sub(fromMonth, INTERVAL 11 MONTH) then mtot else null end ) total
 		, sum( case when date=date_sub(fromMonth, INTERVAL 0 MONTH) then mtot else 0 end ) month_0
 		, sum( case when date=date_sub(fromMonth, INTERVAL 1 MONTH) then mtot else 0 end ) month_1
@@ -45,6 +45,7 @@ BEGIN
             and if( itemType is null or length(trim(itemType)) = 0, true, item.type = itemType )
 		group by date, country_code
 	) tmp
+    join countries on tmp.country_code = countries.country_code # add country latlon
 	group by country_code
     having total is not null
 	order by total desc, country_code;
