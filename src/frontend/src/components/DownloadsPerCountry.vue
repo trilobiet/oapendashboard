@@ -57,7 +57,7 @@
                 title="Requests per Country" />
             </pane>
             <pane class="elevation-5">
-              <example4/><!-- THIS IS A TEST THIS IS A TEST THIS IS A TEST THIS IS A TEST THIS IS A TEST -->
+              <example4 :items="items"/><!-- THIS IS A TEST THIS IS A TEST THIS IS A TEST THIS IS A TEST THIS IS A TEST -->
             </pane>
           </splitpanes>
 
