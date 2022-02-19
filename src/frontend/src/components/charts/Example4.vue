@@ -2,19 +2,14 @@
 
   <v-map :zoom="initialZoom" :center="centerLocation" :minZoom="minZoom" :maxZoom="maxZoom">
    
-    <v-tilelayer url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"></v-tilelayer>
+    <v-tilelayer url="https://{s}.tile.osm.org/{z}/{x}/{y}.png"></v-tilelayer>
 
-    <v-marker-cluster 
-      :options="clusterOptions"
-      @clusterclick="click()"
-      @ready="ready"
-    >
+    <v-marker-cluster :options="clusterOptions" @clusterclick="clusterclick" @ready="ready">
       <v-marker
-        v-for="item in items"
+         v-for="item in items"
         :key="item.countryCode"
         :lat-lng="latLng(item.latitude,item.longitude)"
-        :options="{weight: item.total}"
-      >
+        :options="{weight: item.total}">
         <v-popup :content="popupText(item)"></v-popup>
       </v-marker>
     </v-marker-cluster>
@@ -42,7 +37,7 @@ export default {
     items: {type: Array},
     initialZoom: {type: Number, default: 2},
     minZoom: {type: Number, default: 2},
-    maxZoom: {type: Number, default: 7},
+    maxZoom: {type: Number, default: 8},
   },
 
   data() {
@@ -57,35 +52,27 @@ export default {
     };
   },
 
-  mounted() {
-
-    setTimeout(() => {
-      console.log("done");
-      this.$nextTick(() => {
-        this.clusterOptions = { disableClusteringAtZoom: 17 };
-      });
-    }, 5000);
-  },
-
   methods: {
 
     latLng,  // import eponymous function from Leaflet
 
-    click: (e) => console.log("clusterclick", e),
+    clusterclick: (e) => console.log("clusterclick", e),
 
     ready: (e) => console.log("ready", e),
 
     popupText(item) {
-      return item.country + "<br/>" + item.total
+      return `<div style="text-align:center">${item.country}<br/><b>${item.total}</b></div>`
     },
 
-    refWeight() {
+    getMaxWeight() {
+      
       const w = this.items.reduce((m, i) => Math.max(m, i.total), 0)
-      console.log("REFWEIGHT: " + w)
+      // console.log("MAX WEIGHT: " + w)
       return w
     },
 
     createCircle(cluster) {
+
       const weight = this.getClusterWeight(cluster);
       // console.log("WEIGHT " + weight);
       return new DivIcon({
@@ -96,55 +83,106 @@ export default {
     },
 
     getClusterWeight(cluster) {
+
       return cluster
         .getAllChildMarkers()
         .reduce((acc, c) => acc + c.options.weight, 0);
     },
 
-    getScaling(maxValue) {
-      const REF_WIDTH = 1000;
-      return 100 * REF_WIDTH / maxValue;
+    getScaling() {
+
+      // heaviest non-clustered circle should have an on screen diameter of LARGEST_SIZE_IN_PX
+      const LARGEST_WEIGHT = this.getMaxWeight()
+      const LARGEST_SIZE_IN_PX = 150
+      return LARGEST_SIZE_IN_PX / Math.sqrt(LARGEST_WEIGHT)
     },
 
     getCircleAsHtml(weight) {
-      // console.log("refWeight: " + this.refWeight)
-      const mWeight = Math.sqrt(weight) * this.getScaling(this.refWeight());
-      const radius = mWeight / 2;
+      
+      const mWeight = Math.sqrt(weight) * this.getScaling()
+      let size, clazz
 
-      //let circle = '<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" style="opacity:.4"><circle cx="20" cy="20" r="20"/></svg>'
+      if (weight > 100000) {
+        size  = mWeight
+        clazz = "mb-large"
+      }
+      else if (weight > 1000) {
+        size  = Math.max(30,mWeight)
+        clazz = "mb-middle"
+      }
+      else {
+        size  = 20
+        clazz = "mb-small"
+      }
 
-      const doos =
-        '<div class="marker-circle" style="width:' + mWeight + "px;" 
-        + "height:" + mWeight + "px;" 
-        + "margin:-" + radius + "px 0 0 -" + radius + "px;" 
-        + "padding:" + radius + "px 0 0 0;" 
-        + "border-radius:" + radius + "px;" 
-        + '">' + weight +  "</div>";
+      const radius = size / 2;
 
-      return doos;
+      const markerbox =
+          `<div class="marker-box ${clazz}" style="`
+        +   `width:${size}px;` 
+        +   `height:${size}px;` 
+        +   `margin:-${radius}px 0 0 -${radius}px;` 
+        +   `padding:${radius}px 0 0 0;`
+        + `">` 
+        +     `<div class="marker-circle" style="`
+        +       `border-radius:${radius}px;` 
+        +     `"></div>`
+        +     `<div class="marker-caption" style="`
+        +       `line-height:${size}px;`
+        +     `">${weight}</div>`
+        + `</div>`
+
+      return markerbox;
     },
   },
 };
 </script>
 
-<style>
-@import "~leaflet/dist/leaflet.css";
-@import "~leaflet.markercluster/dist/MarkerCluster.css";
-@import "~leaflet.markercluster/dist/MarkerCluster.Default.css";
+<style lang="scss">
 
-html,
-body {
-  height: 100%;
-  margin: 0;
-}
+  @import "~leaflet/dist/leaflet.css";
+  @import "~leaflet.markercluster/dist/MarkerCluster.css";
+  @import "~leaflet.markercluster/dist/MarkerCluster.Default.css";
 
-.marker-icon .marker-circle {
+  html, body {
+    height: 100%;
+    margin: 0;
+  }
 
-  text-align: center;
-  color: white;
-  font-weight: bold;
-  background:blueviolet; 
-  color:white; 
-  opacity:.5;
-}
+  .marker-box {
+    position: relative;
+  }  
+
+  .marker-circle {
+
+    position: absolute;
+    top: 0; left: 0;
+    width:100%; height:100%;
+    text-align: center;
+    color: white;
+    font-weight: bold;
+    color:white; 
+    opacity:.5;
+
+    @at-root .mb-small  & { background: rgb(16, 0, 192) }
+    @at-root .mb-middle & { background: rgb(132, 0, 192) }
+    @at-root .mb-large  & { background: rgb(192, 0, 16) }
+  }
+
+  .marker-caption {
+
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    text-align: center;
+    color:white;
+    font-weight: bold;
+    text-shadow: 0 0 2px #000;
+
+    @at-root .mb-small  & { font-size: 0 }
+    @at-root .mb-middle & { font-size: 1em }
+    @at-root .mb-large  & { font-size: 1em }
+  } 
+
+  
 </style>
