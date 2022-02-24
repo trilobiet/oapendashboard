@@ -1,9 +1,7 @@
 <template>
 
-    <v-card class="elevation-5">
-        <v-card-text>
-          <apexchart type="bar" :options="options" :series="series" :height="height"></apexchart>
-        </v-card-text>
+    <v-card class="elevation-5 pa-2" min-height="60vh" :height="height">
+      <apexchart type="bar" :options="options" :series="series" height="100%"></apexchart>
     </v-card>    
 
 </template>
@@ -20,11 +18,15 @@ export default {
     categoriesField: {type: String, default: ""}
   },
 
+  data() {
+    return {
+      height: "100%"
+    }  
+  },
+
   computed: {
 
       series() { return this.getMonthsData() },
-
-      height() { return Math.min(this.items.length,this.rows) * 25 },
 
       options() {
 
@@ -59,6 +61,11 @@ export default {
         }
       }
 
+  },
+
+  updated: function() {
+      this.height = Math.min(this.items.length,this.rows) * 25 
+      console.log("HEIGHT: " + this.height)
   },
 
   methods: {

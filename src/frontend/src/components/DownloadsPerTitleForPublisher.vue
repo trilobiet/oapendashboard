@@ -1,21 +1,21 @@
 <template>
 <div>
-  <v-container>
+  <v-container fluid>
     <v-row>
-      <v-col md="2">
+      <v-col cols="6" md="2">
           <v-select value v-model="currentMonth" :items="this.$store.getters.getMonths" 
               label="End Month" />
       </v-col>
-      <v-col md="2">
+      <v-col cols="6" md="2">
           <v-autocomplete v-model="currentCountry" return-object :items="this.$store.getters.getCountries" 
               item-text="name" item-value="code" :hint="`${currentCountry.name} ${currentCountry.code}`" 
               label="Select" persistent-hint />
       </v-col>
-      <v-col md="2">
+      <v-col cols="6" md="2">
           <v-autocomplete v-model="currentFunderFilter" return-object :items="this.$store.getters.getFunders" 
               item-text="name" item-value="id" label="Funder" />
       </v-col>
-      <v-col md="2">
+      <v-col cols="6" md="2">
           <v-select v-model="currentItemType" return-object :items="this.$store.getters.getItemTypes" 
               item-text="text" item-value="value" label="Item type" />
       </v-col>
@@ -35,17 +35,17 @@
     </v-row>    
   </v-container>
 
-  <v-container>
+  <v-container fluid>
     <v-row>
-      <v-col cols="12">
+      <v-col>
         <my-data-table :headers="headers" :items="items" :loading="loading" :report-title="reportTitle" />
       </v-col>
     </v-row>
   </v-container>
 
-  <v-container>
+  <v-container fluid>
     <v-row>
-        <v-col cols="12">
+        <v-col>
           <stacked-bar-chart :rows="25" :items="items" categoriesField="title" 
             title="Requests per Title" />
         </v-col>  

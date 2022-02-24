@@ -58,6 +58,8 @@
 
     </v-main>
 
+    <site-footer/>
+
   </v-app>
 
 </template>
@@ -65,8 +67,11 @@
 
 <script>
 
+import SiteFooter from '@/components/Footer.vue';
+
+
 export default {
-  components: { },
+  components: { SiteFooter },
   name: 'App',
   data: () => ({ drawer: null }),
   computed:{

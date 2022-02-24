@@ -10,22 +10,21 @@ import lombok.Getter;
 @Getter
 @EqualsAndHashCode
 @Builder
-public class EventCountPerLocationArguments implements Serializable {
+public class EventCountPerRegionArguments implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 
 	private final YearMonth startMonth;
 	private final YearMonth endMonth;
-	private final int decimals;
 	
+	private final Double latitude;
+	private final Double longitude;
+	private final Integer radius;
+	private final String countryCode;
+
 	private final String publisherIds;
 	private final String funderIds;
-	private final String itemId;
 	private final String itemType;	
-
-	private final String countryCode;
-	private final Double longitude;
-	private final Double latitude;
-	private final Integer radius;
+	private final String itemId;
 
 }

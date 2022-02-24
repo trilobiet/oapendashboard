@@ -14,13 +14,14 @@ Vue.prototype.$func = globalfunctions
 
 Vue.config.productionTip = false
 
+/*
 // https://antoniandre.github.io/splitpanes/
 import { Splitpanes, Pane } from 'splitpanes'
 import 'splitpanes/dist/splitpanes.css'
 Vue.use(Splitpanes, Pane)
 Vue.component('splitpanes', Splitpanes)
 Vue.component('pane', Pane)
-
+*/
 
 import VueApexCharts from 'vue-apexcharts'
 Vue.use(VueApexCharts)

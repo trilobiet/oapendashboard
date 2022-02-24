@@ -9,7 +9,7 @@
           &nbsp;-&nbsp;{{user.role}}
       </v-toolbar>
      
-      <v-navigation-drawer v-model="drawer" fixed temporary>
+      <v-navigation-drawer v-model="drawer" fixed temporary class="pt-10 px-4" style="background:#eeeef6">
 
           <v-list dense>
 
@@ -17,6 +17,8 @@
                 Number of Successful Title Requests<br/>
                 Per Month and Title:
               </v-subheader>
+
+              <v-divider class="pa-4"/>
           
               <v-list-item v-on:click="setSheet('downloadsPerTitleLibrary')">
                 <v-list-item-icon><v-icon>mdi-library</v-icon></v-list-item-icon>

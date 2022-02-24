@@ -16,27 +16,27 @@ public class EventRepository {
     private JdbcTemplate jdbcTemplate;	
 	
 
-	@Cacheable(value="eventCountPerLocationCache", key="#args")
-	public List<Event> eventCountPerLocation(
-			EventCountPerLocationArguments args) {
+	@Cacheable(value="eventCountPerRegionCache", key="#args")
+	public List<Event> eventCountPerRegion(
+			EventCountPerRegionArguments args) {
 		
 		List<Event> lst = jdbcTemplate.query(
-			"call event_count_per_location(?,?,?, ?,?,?,?, ?,?,?,?)", 
+			"call event_count_per_region(?,?, ?,?,?,?, ?,?,?,?)", 
 				new BeanPropertyRowMapper<>(Event.class),
 				new Object[] {
+						
 					args.getStartMonth().atDay(1),
 					args.getEndMonth().atDay(1),
-					args.getDecimals(),
+					
+					args.getLatitude(),
+					args.getLongitude(),
+					args.getRadius(),
+					args.getCountryCode(),
 					
 					args.getPublisherIds(),
 					args.getFunderIds(),
 					args.getItemType(),
-					args.getItemId(),
-					
-					args.getCountryCode(),
-					args.getLatitude(),
-					args.getLongitude(),
-					args.getRadius()
+					args.getItemId()
 				}
 			);
 		
@@ -48,6 +48,7 @@ public class EventRepository {
 	public List<EventMonthlyCountsPerCountryRow> getEventCountPerCountry(EventMonthlyCountsPerCountryArguments args) {
 		
 		List<EventMonthlyCountsPerCountryRow> lst = jdbcTemplate.query(
+			// NB we are NOT calling event_count_per_country here!	
 			"call month_totals_per_country(?,?,?, ?,?)", 
 			new EventMonthlyCountsPerCountryRowMapper(),
 			new Object[] {

@@ -1,24 +1,24 @@
 <template>
 <div>
-  <v-container>
+  <v-container fluid>
     <v-row>
-      <v-col md="2">
+      <v-col cols="6" md="2">
           <v-select value v-model="currentMonth" :items="this.$store.getters.getMonths" 
               label="End Month" />
       </v-col>
-      <v-col md="2" v-if="relType=='publisher'">
+      <v-col cols="6" md="2" v-if="relType=='publisher'">
           <v-select v-model="currentFunderFilter" return-object :items="this.$store.getters.getFunders" 
               item-text="name" item-value="id" label="Funder" />
       </v-col>
-      <v-col md="2" v-if="relType=='funder'">
+      <v-col cols="6" md="2" v-if="relType=='funder'">
           <v-select v-model="currentPublisherFilter" return-object :items="this.$store.getters.getPublishers" 
               item-text="name" item-value="id" label="Publisher" />
       </v-col>
-      <v-col md="2">
+      <v-col cols="6" md="2">
           <v-select v-model="currentItemType" return-object :items="this.$store.getters.getItemTypes" 
               item-text="text" item-value="value" label="Item type" />
       </v-col>
-      <v-col md="2">
+      <v-col cols="6" md="2">
           <item-select v-model="currentItem" :relType="relType" :relId="relId" />
       </v-col>
 
@@ -37,31 +37,22 @@
     </v-row>    
   </v-container>
 
-  <v-container>
+  <v-container fluid>
     <v-row>
-  
-      <v-col cols="12">
+      <v-col>
         <my-data-table :headers="headers" :items="items" :loading="loading" :report-title="reportTitle" :subTitle="subTitle" />
       </v-col>
-  
     </v-row>
   </v-container>
 
-  <v-container>
-    <v-row>
-        <v-col cols="12" >
-
-          <splitpanes>
-            <pane class="elevation-5">
-               <stacked-bar-chart :rows="25" :items="items" categoriesField="country"
-                title="Requests per Country" />
-            </pane>
-            <pane class="elevation-5">
-              <example4 :items="items"/><!-- THIS IS A TEST THIS IS A TEST THIS IS A TEST THIS IS A TEST THIS IS A TEST -->
-            </pane>
-          </splitpanes>
-
-
+  <v-container fluid>
+    <v-row class="d-flex">
+        <v-col lg="6" class="flex-grow-1">
+          <stacked-bar-chart :rows="25" :items="items" categoriesField="country"
+            title="Requests per Country" />
+        </v-col>  
+        <v-col lg="6" class="flex-grow-1">
+          <bubble-map :points="bubbleMapPoints(items)"/><!-- THIS IS A TEST THIS IS A TEST THIS IS A TEST THIS IS A TEST THIS IS A TEST -->
         </v-col>  
     </v-row>
   </v-container>  
@@ -74,10 +65,10 @@ import axios from 'axios';
 import MyDataTable from '@/components/MyDataTable.vue';
 import StackedBarChart from '@/components/charts/StackedBarChart.vue';
 import ItemSelect from './ItemSelect.vue';
-import Example4 from './charts/Example4.vue';
+import BubbleMap from './charts/BubbleMap.vue';
 
 export default {
-  components: { MyDataTable, StackedBarChart, ItemSelect, Example4 },
+  components: { MyDataTable, StackedBarChart, ItemSelect, BubbleMap },
   
   props: {
     relId: {type: String, default:''},
@@ -157,8 +148,24 @@ export default {
       if(this.currentItem.id) s+= '&item-id=' + this.currentItem.id
       // console.log("RequestString: " + s)
       return s
-    }
-  }
+    },
+
+    bubbleMapPoints(items) {
+
+      const m = items.map(it => {
+        return {
+          name:it.countryCode,
+          latitude:it.latitude,
+          longitude:it.longitude,
+          size:it.total
+        }
+      })  
+
+      // console.log("MAPPED ITEMS:" + JSON.stringify(m))
+      return(m)
+    },
+
+}
 
 }; 
 </script>

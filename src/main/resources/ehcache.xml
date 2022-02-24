@@ -34,8 +34,8 @@
 		</resources>
 	</cache>
 
-	<cache alias="eventCountPerLocationCache">
-		<key-type>org.oapen.dashboard.api.repository.EventCountPerLocationArguments</key-type>
+	<cache alias="eventCountPerRegionCache">
+		<key-type>org.oapen.dashboard.api.repository.EventCountPerRegionArguments</key-type>
 		<value-type>java.util.List</value-type>
 		<expiry>
 			<ttl unit="days">30</ttl>

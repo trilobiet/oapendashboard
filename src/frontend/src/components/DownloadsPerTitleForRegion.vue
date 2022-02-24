@@ -1,24 +1,24 @@
 <template>
 <div>
-  <v-container>
+  <v-container fluid>
     <v-row>
-      <v-col md="2">
+      <v-col cols="6" md="2">
           <v-select value v-model="currentMonth" :items="this.$store.getters.getMonths" 
               label="End Month" />
       </v-col>
-      <v-col md="2">
+      <v-col cols="6" md="2">
           <v-autocomplete v-model="currentFunderFilter" return-object :items="this.$store.getters.getFunders" 
               item-text="name" item-value="id" label="Funder" />
       </v-col>
-      <v-col md="2">
+      <v-col cols="6" md="2">
           <v-autocomplete v-model="currentPublisherFilter" return-object :items="this.$store.getters.getPublishers" 
               item-text="name" item-value="id" label="Publisher" />
       </v-col>
-      <v-col md="2">
+      <v-col cols="6" md="2">
           <v-select v-model="currentItemType" return-object :items="this.$store.getters.getItemTypes" 
               item-text="text" item-value="value" label="Item type" />
       </v-col>
-      <v-col md="2">
+      <v-col cols="6" md="2">
           <v-select v-model="currentRadius" return-object :items="radii" 
               item-text="text" item-value="value" label="Distance" />
       </v-col>
@@ -37,22 +37,42 @@
       
     </v-row>    
   </v-container>
-  <v-container>
+
+  <v-container fluid>
     <v-row>
-      <v-col cols="12">
-        <my-data-table :headers="headers" :items="items" :loading="loading" :report-title="reportTitle"/>
+      <v-col>
+        <my-data-table :headers="headers" :items="items" :loading="loading" :report-title="getReportTitle"/>
       </v-col>
     </v-row>
   </v-container>
+
+  <v-container fluid>
+    <v-row class="d-flex">
+        <v-col lg="6" class="flex-grow-1">
+          <stacked-bar-chart :rows="25" :items="items" categoriesField="title"
+            title="Requests per Title" />
+        </v-col>  
+        <v-col lg="6" class="flex-grow-1">
+          <events-per-region :relGeo="relGeo" :radius="currentRadius.value"
+            :month="currentMonth"
+            :funderFilter="currentFunderFilter" :publisherFilter="currentPublisherFilter"
+            :itemType="currentItemType" 
+          />
+        </v-col>  
+    </v-row>
+  </v-container>  
+
 </div>  
 </template>
 
 <script>
 import axios from 'axios';
 import MyDataTable from '@/components/MyDataTable.vue';
+import StackedBarChart from '@/components/charts/StackedBarChart.vue';
+import EventsPerRegion from '@/components/EventsPerRegion.vue';
 
 export default {
-  components: { MyDataTable },
+  components: { MyDataTable, StackedBarChart, EventsPerRegion },
   
   props: {
     relId: {type: String, default:''},
@@ -72,7 +92,8 @@ export default {
         {value:20, text:"20 km"},
         {value:50, text:"50 km"},
         {value:100, text:"100 km"},
-        {value:250, text:"250 km"}
+        {value:250, text:"250 km"},
+        {value:500, text:"500 km"}
       ],
       currentRadius:{value:50, text:"50 km"},      
     }    
@@ -80,7 +101,7 @@ export default {
 
   computed: {
 
-      reportTitle() {
+      getReportTitle() {
         return `Number of Successful Title Requests per Month and Title for Region (distance ${this.currentRadius.value} km)`
       }  
   },
