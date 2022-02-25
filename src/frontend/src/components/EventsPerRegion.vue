@@ -1,8 +1,8 @@
 
 <template>
 
-    <div style="height:100%;widht=100%;position:relative">
-
+    <v-sheet class="elevation-5 pa-2" min-height="60vh" height="100%" style="position:relative">
+    
         <v-overlay :value="loading" :absolute="true">loading...</v-overlay>
         <bubble-map 
             :points="bubbleMapPoints(points)" 
@@ -10,9 +10,10 @@
             :initialZoom="zoom"
             :minZoom="5"
             :maxZoom="14"
+            :title="mapTitle"
         />
-
-    </div>
+    
+    </v-sheet>        
 
 </template>
 
@@ -41,6 +42,10 @@ export default {
   },
 
   computed: {
+
+    mapTitle() {
+       return `Yearly requests until ${this.month}` 
+    },
 
     zoom(){  
         // https://www.dcode.fr/function-equation-finder

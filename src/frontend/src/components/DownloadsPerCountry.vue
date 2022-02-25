@@ -47,12 +47,15 @@
 
   <v-container fluid>
     <v-row class="d-flex">
-        <v-col lg="6" class="flex-grow-1">
+        <v-col cols="12" lg="6" class="flex-grow-1">
           <stacked-bar-chart :rows="25" :items="items" categoriesField="country"
-            title="Requests per Country" />
+            :title="chartTitle" />
         </v-col>  
-        <v-col lg="6" class="flex-grow-1">
-          <bubble-map :points="bubbleMapPoints(items)"/><!-- THIS IS A TEST THIS IS A TEST THIS IS A TEST THIS IS A TEST THIS IS A TEST -->
+        <v-col cols="12" lg="6" class="flex-grow-1">
+          <v-sheet class="elevation-5 pa-2" min-height="60vh" height="100%">
+            <bubble-map :points="bubbleMapPoints(items)" 
+            :title="mapTitle" />
+          </v-sheet>
         </v-col>  
     </v-row>
   </v-container>  
@@ -94,6 +97,17 @@ export default {
   mounted() {
     this.callApi();
   },
+
+  computed: {
+
+    chartTitle() {
+      return `Requests per country per month until ${this.currentMonth}` 
+    },
+
+    mapTitle() {
+      return `Yearly requests until ${this.currentMonth}` 
+    }
+  },
   
   watch: {
      currentMonth:'callApi',
@@ -123,7 +137,7 @@ export default {
       let arr = [
         { text: "Country", value: "country" },
         { text: "Code", value: "countryCode" },
-        { text: "Total", value: "total", align: "right" }
+        { text: "Year total", value: "total", align: "right" }
       ];
 
       if (json[0]) {

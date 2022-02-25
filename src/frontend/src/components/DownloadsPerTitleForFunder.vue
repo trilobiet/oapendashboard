@@ -48,7 +48,7 @@
     <v-row>
         <v-col>
           <stacked-bar-chart :rows="25" :items="items" categoriesField="title" 
-            title="Requests per Title" />
+            :title="chartTitle" />
         </v-col>  
     </v-row>
   </v-container>  
@@ -79,6 +79,13 @@ export default {
       currentPublisherFilter: {name:"",id:""},
       reportTitle: "Number of Successful Title Requests per Month and Title"
     }    
+  },
+
+  computed: {
+
+    chartTitle() {
+      return `Requests per title per month until ${this.currentMonth}` 
+    },
   },
   
   mounted() {
@@ -115,7 +122,7 @@ export default {
         { text: "Doi", value: "doi" },
         { text: "Publisher", value: "publisherName" },
         { text: "Doc. type", value: "type" },
-        { text: "Total", value: "total", align:"right" }
+        { text: "Year total", value: "total", align:"right" }
       ];
 
       if (json[0]) {

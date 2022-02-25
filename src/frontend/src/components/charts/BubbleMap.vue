@@ -22,12 +22,17 @@
 
 <template>
 
-  <v-card class="elevation-5 pa-2 oa-map-card" min-height="60vh" height="100%">
+    <div class="oa-map-wrapper">
 
-      <v-map :zoom="initialZoom" :center="centerLocation" :minZoom="minZoom" :maxZoom="maxZoom">
+      <v-map :center="centerLocation" 
+        :zoom="initialZoom" :minZoom="minZoom" :maxZoom="maxZoom" 
+        :options="mapOptions"
+      >
       
-        <v-tilelayer url="https://{s}.tile.osm.org/{z}/{x}/{y}.png" :attribution="attribution"></v-tilelayer>
-        <v-controlscale position="topright" :imperial="false" :metric="true"/>
+        <v-tile-layer url="https://{s}.tile.osm.org/{z}/{x}/{y}.png" :attribution="attribution" />
+        <v-control-scale position="topright" :imperial="false" :metric="true"/>
+        <v-control-zoom position="bottomright" />
+        <v-control class="oa-map-caption" position="topleft">{{title}}</v-control>
 
         <v-marker-cluster :options="clusterOptions" ref="clusterRef">
           <v-marker
@@ -40,13 +45,13 @@
         </v-marker-cluster>
       </v-map>
 
-  </v-card>    
+    </div>
 
 </template>
 
 <script>
 
-import { latLng, /*Icon, icon,*/ DivIcon, Point } from "leaflet";
+import { latLng, DivIcon, Point } from "leaflet";
 import * as Vue2Leaflet from "vue2-leaflet";
 import Vue2LeafletMarkercluster from "vue2-leaflet-markercluster";
 
@@ -54,14 +59,17 @@ export default {
 
   components: {
     "v-map": Vue2Leaflet.LMap,
-    "v-tilelayer": Vue2Leaflet.LTileLayer,
-    "v-controlscale": Vue2Leaflet.LControlScale,
+    "v-tile-layer": Vue2Leaflet.LTileLayer,
+    "v-control": Vue2Leaflet.LControl,
+    "v-control-scale": Vue2Leaflet.LControlScale,
+    "v-control-zoom": Vue2Leaflet.LControlZoom,
     "v-marker": Vue2Leaflet.LMarker,
     "v-popup": Vue2Leaflet.LPopup,
     "v-marker-cluster": Vue2LeafletMarkercluster,
   }, 
 
   props: {
+    title: {type: String, default: ""},
     points: {type: Array},
     centerLocation: {type: Object, default() { return latLng(41.8, 9.5)} }, // world center
     initialZoom: {type: Number, default: 2},
@@ -73,6 +81,7 @@ export default {
 
   data() {
     return {
+      mapOptions: {zoomControl: false},
       attribution:
         '&copy; <a target="_blank" href="http://osm.org/copyright">OpenStreetMap</a> contributors',
       clusterOptions: {
@@ -181,8 +190,18 @@ export default {
     margin: 0;
   }
 
-  .oa-map-card {
+  .oa-map-wrapper {
+    position:relative;
+    height:100%;
     z-index: 1;
+  }
+
+  .oa-map-caption {
+     
+     padding: 4px 10px; 
+     font-size: 14px; 
+     font-weight: 900;
+     background: #fffc;
   }
 
   .oa-marker-box {

@@ -41,18 +41,19 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <my-data-table :headers="headers" :items="items" :loading="loading" :report-title="getReportTitle"/>
+        <my-data-table :headers="headers" :items="items" :loading="loading" 
+          :report-title="reportTitle"/>
       </v-col>
     </v-row>
   </v-container>
 
   <v-container fluid>
     <v-row class="d-flex">
-        <v-col lg="6" class="flex-grow-1">
+        <v-col cols="12" lg="6" class="flex-grow-1">
           <stacked-bar-chart :rows="25" :items="items" categoriesField="title"
-            title="Requests per Title" />
+            :title="chartTitle" />
         </v-col>  
-        <v-col lg="6" class="flex-grow-1">
+        <v-col cols="12" lg="6" class="flex-grow-1">
           <events-per-region :relGeo="relGeo" :radius="currentRadius.value"
             :month="currentMonth"
             :funderFilter="currentFunderFilter" :publisherFilter="currentPublisherFilter"
@@ -101,9 +102,13 @@ export default {
 
   computed: {
 
-      getReportTitle() {
-        return `Number of Successful Title Requests per Month and Title for Region (distance ${this.currentRadius.value} km)`
-      }  
+    reportTitle() {
+      return `Number of Successful Title Requests per Month and Title for Region (distance ${this.currentRadius.value} km)`
+    },
+
+    chartTitle() {
+      return `Requests per title per month until ${this.currentMonth}` 
+    },
   },
   
   mounted() {
@@ -120,10 +125,6 @@ export default {
   
   methods: {
 
-    setTitle() {
-       this.reportTitle = 'burp' 
-    },
-    
     callApi() {
 
       this.loading = true; // visual darkening while loading  
@@ -146,7 +147,7 @@ export default {
         { text: "Publisher", value: "publisherName" },
         { text: "Funding", value: "funders" },
         { text: "Doc. type", value: "type" },
-        { text: "Total", value: "total", align:"right" }
+        { text: "Year total", value: "total", align:"right" }
       ];
 
       if (json[0]) {
