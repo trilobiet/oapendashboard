@@ -1,22 +1,22 @@
 package org.oapen.dashboard.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/")
-public class HomeController {
+public class ApiHomeController {
 	
-    @GetMapping("/")
-    public String home() {
-    	
-    	return "Home";
-    }
+	/*
+	 * application root (localhost:8080/) will automatically 
+	 * be mapped by Spring Boot to static/index.html 
+	 * where vue js application resides.  
+	 */
+	
 	
 	@GetMapping("/api")
     public String apiHome() {
     	
     	return "API home";
     }
+	
 }

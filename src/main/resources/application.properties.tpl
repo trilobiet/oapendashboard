@@ -8,7 +8,7 @@ spring.web.resources.add-mappings=false
 
 # ============== depending dev/prod: ================================
 
-server.port=8080
+server.port=8081
 
 spring.datasource.url=jdbc:mysql://<yourhost>:3306/irusuk?reconnect=true&rewriteBatchedStatements=true
 spring.datasource.username=*******

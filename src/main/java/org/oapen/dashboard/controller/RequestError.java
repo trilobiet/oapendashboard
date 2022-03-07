@@ -1,4 +1,4 @@
-package org.oapen.dashboard.api.entities;
+package org.oapen.dashboard.controller;
 
 import java.time.LocalDateTime;
 

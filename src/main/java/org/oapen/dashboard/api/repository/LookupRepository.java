@@ -114,7 +114,11 @@ public class LookupRepository {
 			LocalDate.class 
 		);
 		
+		// do not include month beyond lastRequestableMonth (because of update day)
+		LocalDate lrm = lastRequestableMonth().atDay(1);
+		
 		List<YearMonth> months = lst.stream()
+			.filter(date -> date.isBefore(lrm.plusMonths(1)))	
 			.map(date -> YearMonth.of(date.getYear(),date.getMonthValue()))
 			.collect(Collectors.toList());
 

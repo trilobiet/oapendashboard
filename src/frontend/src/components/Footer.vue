@@ -12,7 +12,7 @@
         {{ link }}
       </v-btn>
       <v-col class="pa-2 py-8 text-center white--text" cols="12">
-        {{ new Date().getFullYear() }} — <strong>OAPEN.org</strong>
+        &copy;{{ new Date().getFullYear() }} — <strong>OAPEN.org</strong>
       </v-col>
     </v-row>
   </v-footer>

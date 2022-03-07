@@ -16,11 +16,21 @@
         <v-form @submit.prevent="login">
 
           <v-card-text>
+              <!--
               <v-text-field
                 v-model="input.userid"
                 label="User id"
                 required
-              ></v-text-field>
+              ></v-text-field>--> 
+              <!-- TEMPORARY LOGIN: -->
+              <v-select v-model="input.userid" label="User id" required 
+                :items="[
+                  'b818ba9d-2dd9-4fd7-a364-7f305aef7ee9', 
+                  'df73bf94-b818-494c-a8dd-6775b0573bc2', 
+                  '6145e100-82b1-11ec-a8a3-0242ac120002', 
+                  'f15b581c-0463-4389-9245-141810c3ca1e',
+                  '8b1ed926-02e2-478f-b016-72c15526a7ef'
+                ]"/>
               <v-text-field
                 v-model="input.password"
                 label="Password"
