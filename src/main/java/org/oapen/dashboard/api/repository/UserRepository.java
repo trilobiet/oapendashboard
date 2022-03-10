@@ -2,7 +2,8 @@ package org.oapen.dashboard.api.repository;
 
 import java.util.Optional;
 
-import org.oapen.dashboard.api.entities.User;
+import org.oapen.dashboard.security.User;
+import org.oapen.dashboard.security.UserRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;

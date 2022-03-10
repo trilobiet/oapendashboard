@@ -1,10 +1,9 @@
-package org.oapen.dashboard.api.repository;
+package org.oapen.dashboard.security;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.oapen.dashboard.api.entities.GeoLocation;
-import org.oapen.dashboard.api.entities.User;
 import org.springframework.jdbc.core.RowMapper;
 
 public class UserRowMapper implements RowMapper<User> {
@@ -15,9 +14,11 @@ public class UserRowMapper implements RowMapper<User> {
 		User user = new User();
 		
 		user.setId(rs.getString("id"));
-		user.setIrusId(rs.getString("irusId"));
-		user.setRole(rs.getString("role"));
+		user.setPassword(rs.getString("password"));
 		user.setName(rs.getString("name"));
+		user.setRole(rs.getString("role"));
+		user.setIrusId(rs.getString("irus_id"));
+		user.setCountryCode(rs.getString("country_code"));
 		
 		GeoLocation loc = new GeoLocation();
 		loc.setLat(rs.getDouble("lat"));

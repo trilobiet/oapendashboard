@@ -3,8 +3,8 @@ spring.profiles.active=@activatedProperties@
 
 spring.cache.jcache.config=classpath:ehcache.xml
 
-spring.mvc.throw-exception-if-no-handler-found=true 
-spring.web.resources.add-mappings=false
+server.error.whitelabel.enabled=false
+server.error.path=/error
 
 # ============== depending dev/prod: ================================
 

@@ -4,6 +4,9 @@ import java.time.YearMonth;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+
 import org.oapen.dashboard.api.entities.Event;
 import org.oapen.dashboard.api.entities.EventMonthlyCountsPerCountryRow;
 import org.oapen.dashboard.api.entities.EventMonthlyCountsPerItemRow;
@@ -16,6 +19,7 @@ import org.oapen.dashboard.api.repository.EventMonthlyCountsPerItemArguments.Eve
 import org.oapen.dashboard.api.repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,6 +42,9 @@ public class EventController {
 	@Autowired
     private EventRepository eventRepository;
 	
+	
+	// Access checking
+	@PreAuthorize("@customPreAuthorizer.authorizeFunderOrPublisherForGlobalData(#publisherId,#funderId)")
     @GetMapping("/eventcount-per-country")
     public List<EventMonthlyCountsPerCountryRow> eventCountPerCountry(
     	@Schema(type = "string", format = "yearmonth", example = "2021-12") // swagger doc annotation	
@@ -59,42 +66,9 @@ public class EventController {
     	return eventRepository.getEventCountPerCountry(args.build());
     }
     
-
     
-    @GetMapping("/eventcount-per-region")
-    public List<Event> eventCountPerRegion(
-    	@Schema(type = "string", format = "yearmonth", example = "2021-12") // swagger doc annotation
-    	@RequestParam(required=true) @DateTimeFormat(pattern = "yyyy-MM") @ValidYearMonth YearMonth startmonth,
-    	@Schema(type = "string", format = "yearmonth", example = "2021-12") // swagger doc annotation
-    	@RequestParam(required=true) @DateTimeFormat(pattern = "yyyy-MM") @ValidYearMonth YearMonth endmonth,
-    	@RequestParam(required=true, name="latitude") Double latitude,
-    	@RequestParam(required=true, name="longitude") Double longitude,
-    	@RequestParam(required=true, name="radius") Integer radius,
-    	@RequestParam(required=false,name="country-code") Optional<String> countryCode,
-    	@RequestParam(required=false,name="publisher-id") Optional<String> publisherId,
-    	@RequestParam(required=false,name="funder-id") Optional<String> funderId,
-    	@RequestParam(required=false,name="item-id") Optional<String> itemId,
-    	@RequestParam(required=false,name="item-type") Optional<String> itemType
-    ) {	
-    	
-    	EventCountPerRegionArgumentsBuilder args = EventCountPerRegionArguments
-    		.builder()
-    			.startMonth(startmonth)
-    			.endMonth(endmonth)
-    			.latitude(latitude)
-    			.longitude(longitude)
-    			.radius(radius);
-
-    	if (countryCode.isPresent()) args.countryCode(countryCode.get());
-    	if (publisherId.isPresent()) args.publisherIds(publisherId.get());
-    	if (funderId.isPresent()) args.funderIds(funderId.get());
-    	if (itemId.isPresent()) args.itemId(itemId.get());
-    	if (itemType.isPresent()) args.itemType(itemType.get());
-    	
-       	return eventRepository.eventCountPerRegion(args.build());
-    }    
-    
-    
+	// Access checking
+	@PreAuthorize("@customPreAuthorizer.testIt(#publisherId,#funderId)")
     @GetMapping("/eventcount-per-item-publisherfunder")
     public List<EventMonthlyCountsPerItemRow> eventCountPerItem(
     	@Schema(type = "string", format = "yearmonth", example = "2021-12") // swagger doc annotation
@@ -118,7 +92,40 @@ public class EventController {
     	return eventRepository.getEventCountPerItemForPublisherFunder(args.build());
     }
     
+    
+    @GetMapping("/eventcount-per-region")
+    public List<Event> eventCountPerRegion(
+    	@Schema(type = "string", format = "yearmonth", example = "2021-12") // swagger doc annotation
+    	@RequestParam(required=true) @DateTimeFormat(pattern = "yyyy-MM") @ValidYearMonth YearMonth startmonth,
+    	@Schema(type = "string", format = "yearmonth", example = "2021-12") // swagger doc annotation
+    	@RequestParam(required=true) @DateTimeFormat(pattern = "yyyy-MM") @ValidYearMonth YearMonth endmonth,
+    	@RequestParam(required=true) Double latitude,
+    	@RequestParam(required=true) Double longitude,
+    	@RequestParam(required=true) @Min(10) @Max(500) Integer radius,
+    	@RequestParam(required=false,name="country-code") Optional<String> countryCode,
+    	@RequestParam(required=false,name="publisher-id") Optional<String> publisherId,
+    	@RequestParam(required=false,name="funder-id") Optional<String> funderId,
+    	@RequestParam(required=false,name="item-id") Optional<String> itemId,
+    	@RequestParam(required=false,name="item-type") Optional<String> itemType
+    ) {	
+    	
+    	EventCountPerRegionArgumentsBuilder args = EventCountPerRegionArguments
+    		.builder()
+    			.startMonth(startmonth)
+    			.endMonth(endmonth)
+    			.latitude(latitude)
+    			.longitude(longitude)
+    			.radius(radius);
 
+    	if (countryCode.isPresent()) args.countryCode(countryCode.get());
+    	if (publisherId.isPresent()) args.publisherIds(publisherId.get());
+    	if (funderId.isPresent()) args.funderIds(funderId.get());
+    	if (itemId.isPresent()) args.itemId(itemId.get());
+    	if (itemType.isPresent()) args.itemType(itemType.get());
+    	
+       	return eventRepository.eventCountPerRegion(args.build());
+    }        
+    
     
     @GetMapping("/eventcount-per-item-library")
     public List<EventMonthlyCountsPerItemRow> eventCountPerItemForLibrary(
@@ -151,7 +158,7 @@ public class EventController {
     	@RequestParam(required=true) @DateTimeFormat(pattern = "yyyy-MM") @ValidYearMonth YearMonth month,
     	@RequestParam(required=true) Double latitude,
     	@RequestParam(required=true) Double longitude,
-    	@RequestParam(required=true) Integer radius,
+    	@RequestParam(required=true) @Min(10) @Max(500) Integer radius,
     	@RequestParam(required=false,name="publisher-id") Optional<String> publisherId,
     	@RequestParam(required=false,name="funder-id") Optional<String> funderId,
     	@RequestParam(required=false,name="item-id") Optional<String> itemId,
