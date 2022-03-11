@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class MyErrorController implements ErrorController {
 	
-	@GetMapping("/error")
+	/*@GetMapping("/error")
     public String someError() {
     	
     	return "invalid path";
-    }
+    }*/
 
 }
