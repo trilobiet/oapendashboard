@@ -68,7 +68,7 @@ public class EventController {
     
     
 	// Access checking
-	@PreAuthorize("@customPreAuthorizer.testIt(#publisherId,#funderId)")
+	@PreAuthorize("@customPreAuthorizer.authorizeFunderOrPublisherForGlobalData(#publisherId,#funderId)")
     @GetMapping("/eventcount-per-item-publisherfunder")
     public List<EventMonthlyCountsPerItemRow> eventCountPerItem(
     	@Schema(type = "string", format = "yearmonth", example = "2021-12") // swagger doc annotation

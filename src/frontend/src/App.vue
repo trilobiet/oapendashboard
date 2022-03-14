@@ -41,9 +41,8 @@
 
           <v-divider></v-divider>
 
-          <v-list-item to="/login">
-            <v-list-item-title v-if="isLoggedIn">Log out</v-list-item-title>
-            <v-list-item-title v-else>Log in</v-list-item-title>
+          <v-list-item v-if="isLoggedIn" href="/logout?logout"> <!-- points to spring template! (so uses 'href' i.o 'to') -->
+            <v-list-item-title>Log out</v-list-item-title>
           </v-list-item>
 
         </v-list>

@@ -35,7 +35,10 @@ Vue.component('apexchart', VueApexCharts)
 // Preload some api lookup data
 const promises = [
 
-  //axios.get('/api/find-user?id='+userId).then(resp => store.commit("setUser",resp.data)),
+  // Once we get here we already have a browser session (Spring Boot),
+  // so we only need to ask the api who is the logged in user. 
+  axios.get('/api/user')
+    .then(resp => store.commit("setUser",resp.data)),
 
   axios.get('/api/lastrequestablemonth')
     .then(resp => store.commit("setLastRequestableMonth",resp.data)),

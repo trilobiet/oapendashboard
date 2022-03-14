@@ -1,5 +1,12 @@
 <template>
 
+      <!-- ~~~~~~~~~~~~~~~~~~~~~~~~
+        OBSOLETE TEMPLATE!
+        ------------------
+        Spring Boot session login 
+        is used instead
+      ~~~~~~~~~~~~~~~~~~~~~~~~~ -->  
+
       <v-card width="400" class="mx-auto mt-15">
 
         <v-card-title class="justify-center my-card-title">

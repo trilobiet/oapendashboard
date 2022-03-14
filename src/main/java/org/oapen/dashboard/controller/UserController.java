@@ -28,13 +28,14 @@ public class UserController {
 	@Autowired
     private UserRepository userRepository;
 	
+	/* ONLY admin here!
     @GetMapping("/find-user") 
-    public Optional<User>findUser( // TODO remove
+    public Optional<User>findUser( 
     	@RequestParam(required=true) String id
     ) {
     	
     	return userRepository.findById(id);
-    }
+    }*/
 
     @GetMapping("/user")
     public User user() {

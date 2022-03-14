@@ -1,4 +1,4 @@
 
 Stop running application!
 
-mvn install -Pprod
+mvn clean install -Pprod
