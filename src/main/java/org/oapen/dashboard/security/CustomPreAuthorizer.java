@@ -16,9 +16,11 @@ public class CustomPreAuthorizer {
 	 * 
 	 * Users who are funders or publishers may only see their own data, 
 	 * but extra filters within these data on the other type (publishers for 
-	 * funders and v.v.) is allowed.
+	 * funders and v.v.) are allowed.
 	 * 
-	 * Users who are libraries may never request these data.  
+	 * Users who are libraries may never request these data directly, but extra filters
+	 * on funders or publishers, added to the geographical boundaries of a library 
+	 * (ip or lat/lon) are allowed.  
 	 * 
 	 * @param publisherId Comma separated list of publishers (usually 1 or 2)
 	 * @param funderId Comma separated list of funders (usually 1 or 2)
@@ -49,7 +51,7 @@ public class CustomPreAuthorizer {
 				funders.containsAll(userParties) && userParties.containsAll(funders);
     	}
     	
-    	System.out.println("->->->->->-> THIS IS WHO YOU ARE: " + user);    	
+    	// System.out.println("->->->->->-> THIS IS WHO YOU ARE: " + user);    	
     	
     	return granted;
     }

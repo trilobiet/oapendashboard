@@ -33,7 +33,10 @@ public class User implements UserDetails, Serializable {
 	@Override
 	@JsonIgnore
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
+		if (role.equalsIgnoreCase("admin"))
+			return Arrays.asList(new SimpleGrantedAuthority(role));
+		else
+			return Arrays.asList(new SimpleGrantedAuthority("user"),new SimpleGrantedAuthority(role));
 	}
 	
 	@Override

@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 // TEST TEST TEST
-@Component
+// @Component // De-comment to activate
 public class YourAuthenticationFilter extends OncePerRequestFilter {
 
 	@Override
@@ -25,11 +25,8 @@ public class YourAuthenticationFilter extends OncePerRequestFilter {
 		System.out.println(request);
 	    
 		/*
-		//Place here your redis checks, get Authentication and so on
 	    SecurityContextHolder.getContext().setAuthentication(auth);
 	    */
-		
-		//SecurityContextHolder.getContext().setAuthentication(null);
 
 		filterChain.doFilter(request, response);
 		

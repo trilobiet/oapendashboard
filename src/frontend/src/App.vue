@@ -35,9 +35,6 @@
           <v-list-item to="/about">
             <v-list-item-title>About</v-list-item-title>
           </v-list-item>
-          <v-list-item v-if="isLoggedIn" to="/dashboard">
-            <v-list-item-title>Dashboard</v-list-item-title>
-          </v-list-item>
 
           <v-divider></v-divider>
 
@@ -80,8 +77,8 @@ export default {
     isLoggedIn(){
       return this.$store.getters.getUser 
     },
-    relType(){
-      return this.$store.getters.getRelType
+    user(){
+      return this.$store.getters.getUser 
     }
   }
 };

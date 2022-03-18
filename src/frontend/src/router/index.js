@@ -1,44 +1,54 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
 import About from '../views/About.vue'
-import Login from '../views/Login.vue'
+import Management from '../views/Management.vue'
+// import Login from '../views/Login.vue'
 import store from '../store' // your vuex store 
 
 Vue.use(VueRouter)
 
-const ifAuthenticated = (to, from, next) => {
-  if (store.getters.getUser) {
-    next()
-    return
-  }
-  next('/login')
-}
-
 const routes = [
   {
     path: '/',
-    name: 'Home',
-    component: Home
+    beforeEnter: (to, from, next) => {
+      if (store.getters.getUser.role=="admin") 
+        next('/management')
+      else 
+        next('/dashboard')
+    }  
+  },
+  {
+    path: '/dashboard',
+    name: 'Dashboard',
+    component: () => import(/* webpackChunkName: "about" */ '../views/Dashboard.vue'),
+    beforeEnter: (to, from, next) => {
+      if (store.getters.getUser.role=="admin") 
+        next('/')
+      else 
+        next()
+    }
   },
   {
     path: '/about',
     name: 'About',
     component: About
   },
-  // route level code-splitting
-  // this generates a separate chunk (about.[hash].js) for this route
-  // which is lazy-loaded when the route is visited.
-  { path: '/dashboard', 
-    name: 'Dashboard',
-    component: () => import(/* webpackChunkName: "about" */ '../views/Dashboard.vue'), 
-    beforeEnter: ifAuthenticated
-  }, 
   {
+    path: '/management',
+    name: 'Management',
+    component: Management,
+    beforeEnter: (to, from, next) => {
+      if (store.getters.getUser.role=="admin") 
+        next()
+      else 
+        next('/')
+    }
+  },
+  /*{
     path: '/login',
     name: 'Login',
     component: Login
-  },
+  },*/
 ]
 
 const router = new VueRouter({
