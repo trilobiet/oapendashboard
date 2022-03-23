@@ -48,15 +48,14 @@ BEGIN
             group_concat(distinct funder.name) as funders,  
 			date, sum(requests) as mtot 
 			FROM event ev 
-				join library_ips l on 
-					inetAton >= ip1a AND inetAton <= l.ip2a
-					#if( is_ipv4(ev.ip), inet_aton(ev.ip) >= ip1a AND inet_aton(ev.ip) <= l.ip2a, false ) 
+				join ip_range l on 
+					ip_aton >= ip_start_aton AND ip_aton <= l.ip_end_aton
                 join item on item_id = item.id 
                 left join (
 					item_funder inner join funder on item_funder.funder_id = funder.id    
 				) on item_funder.item_id = item.id 
 			where country_code = countryCode  
-            and library_id = libraryId
+            and user_id = libraryId
             and date > yearBefore
 			and date <= fromMonth
 

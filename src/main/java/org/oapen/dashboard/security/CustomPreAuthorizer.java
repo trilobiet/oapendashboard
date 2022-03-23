@@ -3,7 +3,9 @@ package org.oapen.dashboard.security;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
+import org.oapen.dashboard.management.User;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
@@ -31,7 +33,8 @@ public class CustomPreAuthorizer {
     	boolean granted = false;
 
     	User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    	List<String> userParties = Arrays.asList(user.getIrusId().split(",", -1));
+    	//Set<String> userParties = user.getIrusIds();
+    	Set<String> userParties = user.getIrusIds();
     	
     	if (user.getRole().equals("publisher")) {
     		

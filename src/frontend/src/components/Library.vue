@@ -5,7 +5,7 @@
       <v-toolbar dense class="fixed-bar">
           <v-btn icon @click="drawer=!drawer"><v-icon>mdi-menu</v-icon></v-btn>
           <v-spacer></v-spacer>
-          <strong>{{user.name}}</strong> 
+          <strong>{{user.fullname}}</strong> 
           &nbsp;-&nbsp;{{user.role}}
       </v-toolbar>
      

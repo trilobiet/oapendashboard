@@ -1,3 +1,6 @@
+
+// use prefix this.$func. to call from vue files
+
 export const globalfunctions = {
 
   flattenJSON: (obj={}, res={}, extraKey='') => {
@@ -14,11 +17,11 @@ export const globalfunctions = {
     return res; 
   },
 
-  flattenJsonArray: (data) => {
+  flattenJsonArray: data => {
     return data.map(r => globalfunctions.flattenJSON(r))
   },
 
-  yearBefore: (yearMonth) => {
+  yearBefore: yearMonth => {
 
     const d = new Date(yearMonth);
     const year = d.getFullYear() -1
@@ -26,5 +29,11 @@ export const globalfunctions = {
     if (month.length < 2) month = '0' + month;
     return year + '-' + month
   }, 
+
+  isValidIp4: str => {
+
+    const regexExp = /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/gi;
+    return regexExp.test(str);
+  }
 
 }

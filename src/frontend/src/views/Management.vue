@@ -38,6 +38,19 @@
                     <span v-html="geoLink(item)"></span>
                   </template> 
 
+                  <template v-slot:item.irusIds="{ item }">
+                    <v-chip :color="'#aaa'" dark v-if="item.irusIds.length">
+                      {{ item.irusIds.length }}
+                    </v-chip>
+                  </template>
+
+                  <template v-slot:item.role="{ item }">
+                    <v-chip :color="colorForRole(item.role)" dark>
+                      <v-icon :title="item.role">{{iconForRole(item.role)}}</v-icon>
+                    </v-chip>
+                  </template>
+
+
                   <!--  FORM ====================================================== -->
                   <template v-slot:top>
 
@@ -65,14 +78,19 @@
                             <v-container>
                               <v-row>
                                 <v-col cols="12" sm="6" md="4">
-                                  <v-text-field v-model="editedItem.name" label="User name"></v-text-field>
+                                  <v-text-field v-model="editedItem.username" label="User name"></v-text-field>
                                 </v-col>
                                 <v-col cols="12" sm="6" md="4">
-                                  <v-text-field v-model="editedItem.role" label="Role"></v-text-field>
+                                  <v-text-field v-model="editedItem.password" label="Password"></v-text-field>
                                 </v-col>
                                 <v-col cols="12" sm="6" md="4">
-                                  <v-text-field v-model="editedItem.id" label="Id"></v-text-field>
+                                  <v-text-field v-model="editedItem.fullname" label="Full name"></v-text-field>
                                 </v-col>
+                                <v-col cols="12" sm="6" md="4">
+                                  <v-select v-model="editedItem.role" :items="roles" label="Role" />
+                                </v-col>
+                              </v-row>  
+                              <v-row v-if="editedItem.role=='library'">  
                                 <v-col cols="12" sm="6" md="4">
                                   <v-text-field v-model="editedItem.countryCode" label="Country code"></v-text-field>
                                 </v-col>
@@ -82,7 +100,23 @@
                                 <v-col cols="12" sm="6" md="4">
                                   <v-text-field v-model="editedItem.geoLocation.lon" label="Location lon"></v-text-field>
                                 </v-col>
+                                <v-col cols="12">
+                                  <!--<v-textarea v-model="ipRangesToText" label="Ip Ranges" @change="changeIt()"></v-textarea>-->
+                                  <v-textarea :value="ipRangesToText(editedItem.ipRanges)" label="Ip Ranges" @change="textToIpRanges"></v-textarea>
+                                </v-col>
                               </v-row>
+                              <v-row v-if="editedItem.role=='publisher'">
+                                <v-col cols="12" sm="6" md="4">
+                                  <v-autocomplete v-model="editedItem.irusIds" :items="publishers" multiple
+                                    item-text="name" item-value="id" label="Publisher(s)"/>
+                                </v-col>  
+                              </v-row>  
+                              <v-row v-if="editedItem.role=='funder'">
+                                <v-col cols="12" sm="6" md="4">
+                                  <v-autocomplete v-model="editedItem.irusIds" :items="funders" multiple
+                                    item-text="name" item-value="id" label="Funder(s)"/>
+                                </v-col>  
+                              </v-row>  
                             </v-container>
                           </v-card-text>
 
@@ -110,6 +144,23 @@
                         </v-card>
 
                       </v-dialog>
+
+
+                      <!-- Error Dialog ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                      <v-dialog v-model="dialogError" max-width="500px">
+
+                        <v-card>
+                          <v-card-title class="text-h6">Oops</v-card-title>
+                          <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn color="blue darken-1" text @click="closeError">Close</v-btn>
+                            <v-spacer></v-spacer>
+                          </v-card-actions>
+                        </v-card>
+
+                      </v-dialog>
+
+
 
                     </v-toolbar>
                   </template>
@@ -150,25 +201,35 @@ export default {
       tableSearch: '',
       dialog: false,
       dialogDelete: false,      
+      dialogError: false,      
       headers: [],
       items:[], 
       editedIndex: -1,      
       editedItem: {
-        name: '',
+        username: '',
+        password: '',
+        fullname: '',
         role: '',
         id: '',
-        irusId: '',
+        irusIds: [],
         countryCode: '',
         geoLocation: {'lat':'0.0','lon':'0.0'},
+        ipRanges: []
       },
       defaultItem: {
-        name: '',
-        role: '',
-        id: '',
-        irusId: '',
+        username: '',
+        password: '',
+        fullname: '',
+        role: 'library',
+        //id: '',
+        irusIds: [],
         countryCode: '',
         geoLocation: {'lat':'0.0','lon':'0.0'},
-      },      
+        ipRanges: []
+      },   
+      roles: ["publisher","funder","library"],
+      publishers: this.$store.getters.getPublishers,
+      funders: this.$store.getters.getFunders,
     }    
   },
   
@@ -176,6 +237,31 @@ export default {
     formTitle () {
       return this.editedIndex === -1 ? 'New User' : 'Edit User'
     },
+
+    /*
+    ipRangesToText: {
+        get(){
+          //this function will determine what is displayed in the input
+          console.log("HALLO: " + JSON.stringify(this.editedItem.ipRanges))
+          return this.editedItem.ipRanges.reduce((tot,y) => tot + "" + y.ipStart + " - " + y.ipEnd + "\n", "")
+        },
+        set(newVal){
+          //this function will run whenever the input changes
+          const ret = newVal.split("\n") // an Array
+          .filter(nv => {
+            const pair = nv.split(" - ")
+            return this.$func.isValidIp4(pair[0]) && this.$func.isValidIp4(pair[1])
+          })
+          .map(nv => {
+            const pair = nv.split(" - ")
+            return {"ipStart":pair[0],"ipEnd":pair[1]}
+          })
+
+          console.log("NIEUW: " + JSON.stringify(ret))
+        }
+    }
+    */
+
   },
 
   /*created() {
@@ -197,6 +283,47 @@ export default {
   
   methods: {
 
+    ipRangesToText(val) {
+      return val.reduce((tot,y) => tot + "" + y.ipStart + " - " + y.ipEnd + "\n", "")
+    },
+
+    textToIpRanges(val) {
+
+      const ipRanges = val.split("\n") // an Array
+        .filter(nv => {
+          const pair = nv.split(" - ")
+          return this.$func.isValidIp4(pair[0]) && this.$func.isValidIp4(pair[1])
+        })
+        .map(nv => {
+          const pair = nv.split(" - ")
+          return {"id":this.editedItem.id,"ipStart":pair[0],"ipEnd":pair[1]}
+        })
+
+        this.editedItem.ipRanges = ipRanges
+
+        console.log("NIEUW!: " + JSON.stringify(ipRanges))
+    },
+
+    changeIt() {
+      console.log("CHANGED")
+    },
+
+    colorForRole(role) {
+
+      if (role == 'admin') return 'red'
+      else if (role == 'library') return 'green'
+      else if (role == 'publisher') return 'blue'
+      else return 'purple'
+    },
+
+    iconForRole(role) {
+
+      if (role == 'admin') return 'mdi-key-chain-variant'
+      else if (role == 'library') return 'mdi-library'
+      else if (role == 'publisher') return 'mdi-bank'
+      else return 'mdi-hand-coin'
+    },
+
     geoLink(item) {
 
         if( item.geoLocation.lat != 0 && item.geoLocation.lon != 0)
@@ -211,7 +338,7 @@ export default {
     
     callApi() {
 
-      this.loading = true; // visual darkening while loading  
+      this.loading = true; 
       axios.get(`/api/users`)
       .then(resp => {
          this.items=resp.data;
@@ -224,10 +351,10 @@ export default {
     getHeaders() {
 
       let arr = [
-        { text: "Name", value: "name" },
+        { text: "Username", value: "username" },
         { text: "Role", value: "role" },
-        { text: "Id", value: "id" },
-        { text: "IRUS Id", value: "irusId" },
+        { text: "Name", value: "fullname" },
+        { text: "IRUS Ids", value: "irusIds" },
         { text: "Country Code", value: "countryCode", cellClass: "td-title" },
         { text: "Location", value: "geoLocation" },
         { text: 'Actions', value: 'actions', sortable: false },
@@ -249,49 +376,84 @@ export default {
     },
 
     deleteItemConfirm () {
-      // TODO Call api to remove by id (this.items[this.editedIndex].id)
-      console.log("Deleted item: " + JSON.stringify(this.items[this.editedIndex].id))
-      this.items.splice(this.editedIndex, 1)
+
+      //const i = this.editedIndex
+      //console.log("DELETING NOW " + i)
+
+      axios.post(`/api/delete-user`, this.editedItem)
+        .then( resp => {
+          console.log(resp)
+          console.log("DELETED " + this.editedIndex)
+          this.items.splice(this.editedIndex, 1)
+        })
+        .catch( err => {
+          console.log(err.response)
+          // Show error on alert
+          this.dialogError = true
+        })
+        .finally(() => {
+          this.setDefault();
+          console.log("Ready.") 
+        })
+
       this.closeDelete()
     },
 
     close () {
       this.dialog = false
-      this.$nextTick(() => {
+      /*this.$nextTick(() => {
         this.editedItem = Object.assign({}, this.defaultItem)
         this.editedIndex = -1
-      })
+      })*/
     },
 
     closeDelete () {
       this.dialogDelete = false
-      this.$nextTick(() => {
+      /*this.$nextTick(() => {
         this.editedItem = Object.assign({}, this.defaultItem)
         this.editedIndex = -1
-      })
+      })*/
+    },
+
+    closeError () {
+      this.dialogError = false
     },
 
     save () {
+
+      //const i = this.editedIndex
 
       // Content-type: application/json
       axios.post(`/api/save-user`, this.editedItem)
         .then( resp => {
           console.log(resp)
-          if (this.editedIndex > -1) 
+          if (this.editedIndex > -1) {
             Object.assign(this.items[this.editedIndex], this.editedItem)
-          else 
+            console.log("ASSIGN " + this.editedIndex + "  ->  " + JSON.stringify(this.editedItem))
+          }  
+          else {
             this.items.push(this.editedItem)
-          }
-        )
+            console.log("PUSH " + this.editedIndex + "  ->  " + JSON.stringify(this.editedItem))
+          }  
+        })
         .catch( err =>
           console.log(err.response)
           // Show error on alert
         )
-        .finally(() => console.log("Ready.") )
+        .finally(() => {
+          this.setDefault();
+          console.log("Ready.") 
+        })
 
       this.close()
     },    
-    
+
+    setDefault() {
+      this.editedItem = Object.assign({}, this.defaultItem)
+      this.editedIndex = -1
+    },
+
+
   }
 
 }; 

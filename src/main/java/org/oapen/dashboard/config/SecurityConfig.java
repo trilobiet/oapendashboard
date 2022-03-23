@@ -44,20 +44,31 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 
 		http
+			//.cors().and()
+			.csrf().disable()
 			.authorizeRequests()
 				.anyRequest().authenticated()
-				//.antMatchers("/api/**").authenticated()
 				.and()
 			.formLogin()
 				.loginPage("/login")
-				//.usernameParameter("email")
 				.permitAll()
 				.and()
 			.logout()
 			;
-		
-		http.csrf().disable();
 	}
+	
+	/*
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        // Enable cors for localhost (development uses another domain/port)
+        configuration.setAllowedOrigins(Arrays.asList("*"));
+        configuration.setAllowedMethods(Arrays.asList("*"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+    */	
 	
 		
 	

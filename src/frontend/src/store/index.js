@@ -81,7 +81,7 @@ export default new Vuex.Store({
                 const r = await axios('/api/funders?publisher-id='+u.irusId)
                 this.commit("setFunders", await r.data)     
             }    
-            else if (u.role == 'library') {
+            else { // library and admin 
                 const r = await axios('/api/funders')
                 this.commit("setFunders", await r.data)     
             }
@@ -95,7 +95,7 @@ export default new Vuex.Store({
                 const r = await axios.get('/api/publishers?funder-id='+u.irusId)
                 this.commit("setPublishers", r.data)
             }         
-            else if (u.role == 'library') {
+            else { // library and admin 
                 const r = await axios.get('/api/publishers');
                 this.commit("setPublishers", r.data)     
             }
