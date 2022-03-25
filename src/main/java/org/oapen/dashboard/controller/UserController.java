@@ -40,6 +40,10 @@ public class UserController {
     	return userRepository.findByUsername(username);
     }
 
+	/**
+	 * 
+	 * @return The signed in user
+	 */
     @GetMapping("/user")
     public User user() {
     	User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -58,14 +62,15 @@ public class UserController {
     
     @PreAuthorize("hasAuthority('admin')")
     @PostMapping("/save-user")
-	public void save(@RequestBody User user) {
+	public User save(@RequestBody User user) {
     	
     	// Content-type: application/json
     	// Sample request body:
     	// {"id":"6145e100-82b1-11ec-a8a3-0242ac120002","irusId":"","name":"Nord Universitet","countryCode":"NO","role":"library","geoLocation":{"lat":67.288889,"lon":14.560278}}
 		
-    	userRepository.save(user);
+    	user = userRepository.save(user);
     	System.out.println("SAVED USER: " + user);
+    	return user;
 	}
 	
 
@@ -77,7 +82,7 @@ public class UserController {
     	// Sample request body:
     	// {"id":"6145e100-82b1-11ec-a8a3-0242ac120002","irusId":"","name":"Nord Universitet","countryCode":"NO","role":"library","geoLocation":{"lat":67.288889,"lon":14.560278}}
 		
-    	//userRepository.delete(user);
+    	userRepository.delete(user);
     	System.out.println("DELETED USER: " + user);
 	}
 

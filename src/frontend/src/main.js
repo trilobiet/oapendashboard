@@ -3,7 +3,6 @@ import Vue from 'vue'
 import App from './App.vue'
 import vuetify from './plugins/vuetify'
 import router from './router'
-import store from './store'
 import axios from 'axios'
 
 import '@/globalComponents'
@@ -11,6 +10,9 @@ import '@/globalComponents'
 import {globalfunctions} from './globalFunctions.js'
 
 Vue.prototype.$func = globalfunctions
+
+import store from './store'
+
 
 Vue.config.productionTip = false
 

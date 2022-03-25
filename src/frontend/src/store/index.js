@@ -6,7 +6,6 @@ import createPersistedState from 'vuex-persistedstate';
 
 Vue.use(Vuex);
 
-
 export default new Vuex.Store({
 
     state: {
@@ -35,14 +34,12 @@ export default new Vuex.Store({
 
         setFunders(state,payload) {
             const ar = [{"id":"",name:"All funders"}] // empty first
-            // load funders for this publisher
             if (state.user.role!='funder') for (const obj of payload) ar.push(obj)
             state.funders = ar
         },
 
         setPublishers(state,payload) {
             const ar = [{"id":"",name:"All publishers"}] // empty first
-            // load publishers for this funder
             if (state.user.role!='publisher') for (const obj of payload) ar.push(obj)
             state.publishers = ar
         },
@@ -111,12 +108,27 @@ export default new Vuex.Store({
             return state.funders
         },
 
+        // funders without 'all'
+        getSingleFunders(state) {
+            return state.funders.filter(x => x.id != "")
+        },
+
         getPublishers(state) {
             return state.publishers
         },
 
+        // publishers without 'all'
+        getSinglePublishers(state) {
+            return state.publishers.filter(x => x.id != "")
+        },
+
         getCountries(state) {
            return state.countries
+        },
+
+        // publishers without 'all'
+        getSingleCountries(state) {
+            return state.countries.filter(x => x.code != "")
         },
 
         getItemTypes(state) {

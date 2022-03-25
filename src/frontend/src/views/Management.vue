@@ -92,7 +92,12 @@
                               </v-row>  
                               <v-row v-if="editedItem.role=='library'">  
                                 <v-col cols="12" sm="6" md="4">
-                                  <v-text-field v-model="editedItem.countryCode" label="Country code"></v-text-field>
+                                  <v-autocomplete v-model="editedItem.countryCode" :items="countries" 
+                                    item-text="name" item-value="code" label="Country" persistent-hint>
+                                    <template slot="item" slot-scope="data">
+                                      {{ data.item.name }}&nbsp;({{ data.item.code }})
+                                    </template>
+                                  </v-autocomplete>
                                 </v-col>
                                 <v-col cols="12" sm="6" md="4">
                                   <v-text-field v-model="editedItem.geoLocation.lat" label="Location lat"></v-text-field>
@@ -101,7 +106,7 @@
                                   <v-text-field v-model="editedItem.geoLocation.lon" label="Location lon"></v-text-field>
                                 </v-col>
                                 <v-col cols="12">
-                                  <!--<v-textarea v-model="ipRangesToText" label="Ip Ranges" @change="changeIt()"></v-textarea>-->
+                                  <!--<v-textarea v-model="ipRangesToText" label="Ip Ranges"></v-textarea>-->
                                   <v-textarea :value="ipRangesToText(editedItem.ipRanges)" label="Ip Ranges" @change="textToIpRanges"></v-textarea>
                                 </v-col>
                               </v-row>
@@ -122,7 +127,7 @@
 
                           <v-card-actions>
                             <v-spacer></v-spacer>
-                            <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
+                            <v-btn color="blue darken-1" text @click="cancel">Cancel</v-btn>
                             <v-btn color="blue darken-1" text @click="save">Save</v-btn>
                           </v-card-actions>
 
@@ -137,8 +142,8 @@
                           <v-card-title class="text-h5">Are you sure you want to delete this user?</v-card-title>
                           <v-card-actions>
                             <v-spacer></v-spacer>
-                            <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
-                            <v-btn color="blue darken-1" text @click="deleteItemConfirm">OK</v-btn>
+                            <v-btn color="blue darken-1" text @click="cancelDelete">Cancel</v-btn>
+                            <v-btn color="blue darken-1" text @click="confirmDelete">OK</v-btn>
                             <v-spacer></v-spacer>
                           </v-card-actions>
                         </v-card>
@@ -228,8 +233,9 @@ export default {
         ipRanges: []
       },   
       roles: ["publisher","funder","library"],
-      publishers: this.$store.getters.getPublishers,
-      funders: this.$store.getters.getFunders,
+      countries: this.$store.getters.getSingleCountries,
+      publishers: this.$store.getters.getSinglePublishers,
+      funders: this.$store.getters.getSingleFunders,
     }    
   },
   
@@ -270,16 +276,17 @@ export default {
 
   mounted() {
     this.callApi();
+    console.log(JSON.stringify(this.publishers))
   },
   
-  watch: {
+ /* watch: {
     dialog (val) {
       val || this.close()
     },
     dialogDelete (val) {
       val || this.closeDelete()
     },
-  },
+  }, */
   
   methods: {
 
@@ -296,7 +303,7 @@ export default {
         })
         .map(nv => {
           const pair = nv.split(" - ")
-          return {"id":this.editedItem.id,"ipStart":pair[0],"ipEnd":pair[1]}
+          return {"ipStart":pair[0],"ipEnd":pair[1]}
         })
 
         this.editedItem.ipRanges = ipRanges
@@ -327,8 +334,8 @@ export default {
     geoLink(item) {
 
         if( item.geoLocation.lat != 0 && item.geoLocation.lon != 0)
-          return  '<a href="https://www.openstreetmap.org/search?query='
-            + item.geoLocation.lat + ',' + item.geoLocation.lon 
+          return  '<a href="https://www.openstreetmap.org?mlat='
+            + item.geoLocation.lat + '&mlon=' + item.geoLocation.lon 
             + '" target="_blank">'
             + item.geoLocation.lat+ ', ' + item.geoLocation.lon        
             + '</a>' 
@@ -375,10 +382,7 @@ export default {
       this.dialogDelete = true
     },
 
-    deleteItemConfirm () {
-
-      //const i = this.editedIndex
-      //console.log("DELETING NOW " + i)
+    confirmDelete () {
 
       axios.post(`/api/delete-user`, this.editedItem)
         .then( resp => {
@@ -396,23 +400,23 @@ export default {
           console.log("Ready.") 
         })
 
-      this.closeDelete()
+      this.dialogDelete = false
     },
 
-    close () {
+    cancel () {
       this.dialog = false
       /*this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem)
-        this.editedIndex = -1
+        this.setDefault();      
       })*/
+      this.setDefault();      
     },
 
-    closeDelete () {
+    cancelDelete () {
       this.dialogDelete = false
       /*this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem)
-        this.editedIndex = -1
+        this.setDefault();      
       })*/
+      this.setDefault();      
     },
 
     closeError () {
@@ -420,8 +424,6 @@ export default {
     },
 
     save () {
-
-      //const i = this.editedIndex
 
       // Content-type: application/json
       axios.post(`/api/save-user`, this.editedItem)
@@ -434,6 +436,8 @@ export default {
           else {
             this.items.push(this.editedItem)
             console.log("PUSH " + this.editedIndex + "  ->  " + JSON.stringify(this.editedItem))
+            console.log("NEW id: " + resp.data.id)
+            this.editedItem.id = resp.data.id
           }  
         })
         .catch( err =>
@@ -445,7 +449,7 @@ export default {
           console.log("Ready.") 
         })
 
-      this.close()
+      this.dialog = false
     },    
 
     setDefault() {

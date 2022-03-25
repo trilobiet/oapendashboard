@@ -133,7 +133,8 @@ public class LookupRepository {
 		
 		jdbcTemplate.query(
 			"select distinct country_code, country "
-			+ "from event order by country", 
+			+ "from event where length(country_code)=2 and length(country) > 0 "
+			+ "order by country", 
 			(rs,i) -> {
 				countries.put(rs.getString("country_code"),rs.getString("country"));
 				return null;
@@ -157,12 +158,12 @@ public class LookupRepository {
 	@Cacheable(value="lookupCache", key="#root.methodName")
 	public List<Funder> funders() {
 		
-		return jdbcTemplate.query(
+		return cleanUpFunders(jdbcTemplate.query(
 			"select distinct funder_id as id, funder_name as name "
 			+ "from events_all_data where funder_id is not null "
 			+ "order by funder_name",
 			new BeanPropertyRowMapper<>(Funder.class)
-		);
+		));
 	}
 	
 	
@@ -205,7 +206,7 @@ public class LookupRepository {
 		
 		return jdbcTemplate.query(
 			"select distinct publisher_id as id, publisher_name as name "
-			+ "from item where publisher_id is not null "
+			+ "from item where publisher_id is not null and publisher_name is not null "
 			+ "order by publisher_name", 
 			new BeanPropertyRowMapper<>(Publisher.class)
 		);
@@ -245,5 +246,19 @@ public class LookupRepository {
 		return publishers;
 	}
 	
+	
+	// Some funders have a uuid in both id and name column. Filter these away.
+	private List<Funder> cleanUpFunders(List<Funder> funders) {
+		
+		return funders.stream()  
+		.filter(f -> !isUUID(f.getName()))
+		.collect(Collectors.toList());
+	}
+	
+	
+	private boolean isUUID(String uuid) {
+		
+		return uuid.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}"); 
+	}
 	
 }

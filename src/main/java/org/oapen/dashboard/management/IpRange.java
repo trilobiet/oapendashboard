@@ -4,56 +4,40 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Getter @Setter @NoArgsConstructor @ToString
-@Entity(name = "IpRange")
+@Getter @Setter @ToString
+@Entity
 @Table(name = "ip_range")
-public class IpRange implements Serializable {
+public class IpRange implements Serializable, Comparable<IpRange> {
 
 	private static final long serialVersionUID = 1L;
 	
-	@Id	@Column(nullable=false)
-	Integer id;
+	@Id	
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
+	private long id;
 	
-	@Column(nullable=false)
 	String ipStart;
-	@Column(nullable=false)
 	String ipEnd;
 	
-	//@ManyToOne(fetch = FetchType.LAZY)
-    //private User user;
 	
+	// Define a natural ordering
 	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		return result;
+	public int compareTo(IpRange o) {
+		
+		if (ipStart.equals(o.ipStart))
+			return ipEnd.compareTo(o.ipEnd);
+		else 
+			return ipStart.compareTo(o.ipStart);
 	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		IpRange other = (IpRange) obj;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		return true;
-	}
-	
+		
 	
 }
