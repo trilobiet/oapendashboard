@@ -17,3 +17,6 @@ spring.datasource.password=*******
 spring.devtools.add-properties=true
 
 logging.level.org.springframework.jdbc.core.JdbcTemplate=info
+
+# spring.jpa.show-sql=true
+# spring.jpa.properties.hibernate.format_sql=true
