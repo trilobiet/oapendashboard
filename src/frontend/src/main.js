@@ -3,6 +3,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import vuetify from './plugins/vuetify'
 import router from './router'
+import store from './store'
 import axios from 'axios'
 
 import '@/globalComponents'
@@ -10,9 +11,6 @@ import '@/globalComponents'
 import {globalfunctions} from './globalFunctions.js'
 
 Vue.prototype.$func = globalfunctions
-
-import store from './store'
-
 
 Vue.config.productionTip = false
 
@@ -26,6 +24,7 @@ axios.interceptors.response.use(function (response) {
   // Do something with response error
   if(error.response.status === 403) {
       // redirect to login page
+      console.log("Session expired...")
       window.location.href = "/login";
   }
   return Promise.reject(error);

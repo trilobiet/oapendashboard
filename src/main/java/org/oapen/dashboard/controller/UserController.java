@@ -41,6 +41,7 @@ public class UserController {
     }
 
 	/**
+	 * Shows your user credentials (accessible to anyone)
 	 * 
 	 * @return The signed in user
 	 */

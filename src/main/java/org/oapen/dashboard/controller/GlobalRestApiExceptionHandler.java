@@ -56,7 +56,7 @@ public class GlobalRestApiExceptionHandler {
 	public ResponseEntity<Object> handleSQLError(SQLException ex, WebRequest request) {
 		
 		HttpHeaders hdrs = new HttpHeaders();
-		hdrs.add("Errortje", "Mag niet, lul");
+		hdrs.add("Ooooooops", "You can't do that");
 
 		return new ResponseEntity<Object>(
 			"SQL Errortje", hdrs, HttpStatus.CONFLICT

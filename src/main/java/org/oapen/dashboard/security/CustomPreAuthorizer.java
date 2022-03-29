@@ -36,7 +36,11 @@ public class CustomPreAuthorizer {
     	//Set<String> userParties = user.getIrusIds();
     	Set<String> userParties = user.getIrusIds();
     	
-    	if (user.getRole().equals("publisher")) {
+    	if (user.getRole().equals("admin")) {
+    		
+    		granted = true;
+    	}
+    	else if (user.getRole().equals("publisher")) {
     		
     		List<String> publishers = Arrays.asList(publisherId.orElse("").split(",", -1));
     		granted = 
