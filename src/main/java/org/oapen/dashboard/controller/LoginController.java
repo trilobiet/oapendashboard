@@ -9,14 +9,19 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class LoginController {
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String login(Model model, String error, String logout) {
+    public String login(Model model, String error) {
+    	
         if (error != null)
-            model.addAttribute("errorMsg", "Your username and password are invalid.");
-
-        if (logout != null)
-            model.addAttribute("msg", "You have been logged out successfully.");
+            model.addAttribute("error", "Your username and password are invalid.");
 
         return "login"; // src/main/resources/templates/login.html (thymeleaf)
     }
     
+    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+    public String logout(Model model) {
+
+        model.addAttribute("msglogout", "You have been logged out successfully.");
+
+        return "login"; // src/main/resources/templates/login.html (thymeleaf)
+    }
 }

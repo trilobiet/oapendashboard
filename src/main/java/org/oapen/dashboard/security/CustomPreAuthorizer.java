@@ -33,7 +33,9 @@ public class CustomPreAuthorizer {
     	boolean granted = false;
 
     	User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    	//Set<String> userParties = user.getIrusIds();
+    	
+    	System.out.println(user.getIrusIds());
+    	
     	Set<String> userParties = user.getIrusIds();
     	
     	if (user.getRole().equals("admin")) {
@@ -43,6 +45,9 @@ public class CustomPreAuthorizer {
     	else if (user.getRole().equals("publisher")) {
     		
     		List<String> publishers = Arrays.asList(publisherId.orElse("").split(",", -1));
+    		
+    		System.out.println(funderId);
+    		
     		granted = 
 				publishers.size() == userParties.size()
 				&&

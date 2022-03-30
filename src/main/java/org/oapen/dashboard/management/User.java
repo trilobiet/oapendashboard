@@ -28,6 +28,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -56,7 +58,7 @@ public class User implements UserDetails, Serializable {
 	@Column(name = "irus_id",nullable = true)
 	private Set<String> irusIds;
 
-    // @JsonProperty(access = Access.WRITE_ONLY) // exclude for display! 
+    @JsonProperty(access = Access.WRITE_ONLY) // exclude for display! 
 	private String password;
 	
 	// All ranges get new ids on every save, so choose orphanRemoval

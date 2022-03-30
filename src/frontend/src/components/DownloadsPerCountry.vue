@@ -74,7 +74,7 @@ export default {
   components: { MyDataTable, StackedBarChart, ItemSelect, BubbleMap },
   
   props: {
-    relId: {type: String, default:''},
+    relIds: {type: Array, default:()=>[]},
     relType: {type: String, default:''},     
   },
   
@@ -154,7 +154,7 @@ export default {
  
       let s = 'month='+this.currentMonth+'&'; 
       if (this.relType=='funder') s += 'funder-id='; else s += 'publisher-id=';
-      s += this.relId;
+      s += this.relIds.join(",");
 
       if(this.currentItemType.value) s += '&item-type=' + this.currentItemType.value
       if(this.currentFunderFilter.id) s += '&funder-id=' + this.currentFunderFilter.id

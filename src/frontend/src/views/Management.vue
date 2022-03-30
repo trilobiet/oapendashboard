@@ -81,7 +81,8 @@
                   </template>
 
                   <template v-slot:no-data>
-                    <v-btn color="primary" @click="initialize">Reset</v-btn>
+                    No data available. Your session may have expired.
+                    <br/><a href="/login">Login again to start a new session</a>
                   </template>                  
 
                 </v-data-table>
@@ -266,6 +267,8 @@ export default {
     },
 
     saveUser () {
+
+      //if (this.editedItem.password.length==0) delete this.editedItem['password'];
 
       // Content-type: application/json
       axios.post(`/api/save-user`, this.editedItem)

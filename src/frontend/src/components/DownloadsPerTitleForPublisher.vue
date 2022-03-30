@@ -64,7 +64,7 @@ export default {
   components: { MyDataTable, StackedBarChart },
   
   props: {
-    relId: {type: String, default:''}
+    relIds: {type: Array, default:()=>[]}
   },
   
   data() {
@@ -136,7 +136,7 @@ export default {
     
     getRequestString() {
  
-      let s = 'month='+this.currentMonth+'&publisher-id='+ this.relId;
+      let s = 'month='+this.currentMonth+'&publisher-id='+ this.relIds.join(",");
       if(this.currentCountry.code) s += '&country-code=' + this.currentCountry.code
       if(this.currentItemType.value) s += '&item-type=' + this.currentItemType.value
       if(this.currentFunderFilter.id) s += '&funder-id=' + this.currentFunderFilter.id

@@ -19,12 +19,13 @@
               <v-text-field v-model="item.username" label="User name" :rules="validation.username"
                :disabled="!isNewItem"></v-text-field>
             </v-col>
-            <v-col cols="12" sm="6" md="4">
-              <v-text-field v-model="item.password" label="Password" :rules="validation.password"
-                :type="showPassword ? 'text' : 'password'"
-                :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                @click:append="showPassword = !showPassword"
-              ></v-text-field>
+            <v-col cols="1">
+              <v-switch v-model="setPassword"></v-switch>
+            </v-col>
+            <v-col cols="3">
+              <v-text-field v-model="item.password" label="Password" :rules="validation.password" v-if="setPassword"></v-text-field>
+              <v-text-field v-else label="Set password" disabled></v-text-field>
+              <v-btn color="blue darken-1" text @click="generatePassword">NEW</v-btn>
             </v-col>
             <v-col cols="12" sm="6" md="4">
               <v-text-field v-model="item.fullname" label="Full name" :rules="validation.fullName"></v-text-field>
@@ -118,7 +119,7 @@
     data() {
       return {
         isValidForm: false,
-        showPassword: false,
+        setPassword: false,
         roles: ["publisher","funder","library"],
         countries: this.$store.getters.getSingleCountries,
         publishers: this.$store.getters.getSinglePublishers,
@@ -135,7 +136,13 @@
         console.log('Prop changed: ', newVal, ' | was: ', oldVal)
         console.log(JSON.stringify(this.item))
         this.editedUser = this.item.username
+        this.setPassword = false
+        this.item.password = ''
       },
+
+      setPassword: function(newVal, oldVal) {
+        if (newVal==false) this.item.password = ''
+      }    
     },  
 
     computed: {
@@ -281,13 +288,38 @@
 
       validateUsernameFree(val) {
 
-        if (!val) return false;
-        const posInList = this.takenUsernames.indexOf(val.trim())
-        if ( posInList == -1 ) return true
-        else return false 
+        if (this.isNewItem) {
+
+          if (!val) return false;
+          const posInList = this.takenUsernames.indexOf(val.trim())
+          if ( posInList == -1 ) return true
+          else return false  
+        }
+        else return true // existing users cannot be renamed
+      },
+
+      generatePassword() {
+
+        var length = 8,
+            charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+            retVal = "";
+
+        for (var i = 0, n = charset.length; i < length; ++i) {
+          retVal += charset.charAt(Math.floor(Math.random() * n));
+        }
+
+        this.setPassword = false
+
+        console.log("PW " + retVal)
+        this.item.password = retVal
+        console.log("PW " + this.item.password)
+        this.setPassword = true
+        
       }
 
     },
 
+
   }
+
 </script>

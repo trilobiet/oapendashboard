@@ -15,6 +15,7 @@ Vue.prototype.$func = globalfunctions
 Vue.config.productionTip = false
 
 // Session time out for api calls: redirect to login page 
+/*
 axios.interceptors.response.use(function (response) {
   // Any status code that lie within the range of 2xx cause this function to trigger
   // Do something with response data
@@ -28,7 +29,7 @@ axios.interceptors.response.use(function (response) {
       window.location.href = "/login";
   }
   return Promise.reject(error);
-});
+});*/
 
 
 import VueApexCharts from 'vue-apexcharts'
