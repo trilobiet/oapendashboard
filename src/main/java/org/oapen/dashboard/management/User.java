@@ -1,11 +1,15 @@
 package org.oapen.dashboard.management;
 
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -67,6 +71,27 @@ public class User implements UserDetails, Serializable {
 	@SortNatural
 	private List<IpRange> ipRanges;
 	
+	@JsonProperty(access=JsonProperty.Access.READ_ONLY)
+	/**
+	 * Url encode the set of irusIds for this User. 
+	 * Spaces will be encoded as '%20'. 
+	 * 
+	 * @return Set of urlencoded irusIds
+	 */
+	public Set<String> getUrlIrusIds() {
+	
+		return irusIds.stream()
+			.map( id -> encodeValue(id).replace("+", "%20") )
+			.collect(Collectors.toSet());
+	}
+	
+	private String encodeValue(String value) {
+	    try {
+			return URLEncoder.encode(value, StandardCharsets.UTF_8.toString());
+		} catch (UnsupportedEncodingException e) {
+			return value;
+		}
+	}
 	
 	@Override
 	@JsonIgnore

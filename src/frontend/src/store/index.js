@@ -75,7 +75,7 @@ export default new Vuex.Store({
             const u = context.state.user; 
 
             if (u.role == 'publisher') { 
-                const r = await axios('/api/funders?publisher-id='+u.irusId)
+                const r = await axios('/api/funders?publisher-id='+u.urlIrusIds.join(','))
                 this.commit("setFunders", await r.data)     
             }    
             else { // library and admin 
@@ -89,7 +89,7 @@ export default new Vuex.Store({
             const u = context.state.user; 
 
             if (u.role == 'funder') { 
-                const r = await axios.get('/api/publishers?funder-id='+u.irusId)
+                const r = await axios.get('/api/publishers?funder-id='+u.urlIrusIds.join(','))
                 this.commit("setPublishers", r.data)
             }         
             else { // library and admin 

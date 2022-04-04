@@ -45,7 +45,7 @@ public class ItemController {
     ) {
     	
     	if (title.trim().length() > 2) {
-    		return itemRepository.findByTitleForPublisher(title, publishers);
+    		return itemRepository.findByTitleForPublishers(title, publishers);
     	}
     	else return Collections.emptyList();
     }
@@ -58,7 +58,7 @@ public class ItemController {
     ) {
     	
     	if (title.trim().length() > 2) {
-    		return itemRepository.findByTitleForFunder(title, funders);
+    		return itemRepository.findByTitleForFunders(title, funders);
     	}
     	else return Collections.emptyList();
     }

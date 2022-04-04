@@ -6,6 +6,9 @@ spring.cache.jcache.config=classpath:ehcache.xml
 server.error.whitelabel.enabled=false
 server.error.path=/error
 
+# timeout session after 24 hours 
+server.servlet.session.timeout=1440m
+
 # ============== depending dev/prod: ================================
 
 server.port=8081

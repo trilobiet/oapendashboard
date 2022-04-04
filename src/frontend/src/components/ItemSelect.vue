@@ -24,9 +24,9 @@ export default {
       type: Object,
       required: true,
     },
-    relId: { // who is asking (only show own item titles)
-      type: String,
-      required: true  
+    relIds: { // who is asking (only show own item titles)
+      type: Array,
+      default: ()=>[]
     },
     relType: { // and is it a funder or a publisher or a library
       type: String,
@@ -76,9 +76,9 @@ export default {
       let apiCall;  
       // In case of funder or publisher only show own titles
       if (this.relType=="funder") 
-        apiCall = `find-funder-item?funders=${this.relId}&`
+        apiCall = `find-funder-item?funders=${this.relIds}&`
       else if (this.relType=="publisher") 
-        apiCall = `find-publisher-item?publishers=${this.relId}&`
+        apiCall = `find-publisher-item?publishers=${this.relIds}&`
       else 
         apiCall = "find-item?";
 

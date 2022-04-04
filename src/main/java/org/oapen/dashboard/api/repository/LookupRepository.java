@@ -168,16 +168,16 @@ public class LookupRepository {
 	
 	
 	@Cacheable(value="lookupCache", key="'funders-pub-'+#publisherId")
-	public List<Funder> funders(String publisherId) {
+	public List<Funder> funders(String publisherIds) {
 
 		return jdbcTemplate.query(
 			"select distinct funder_id as id, funder_name as name "
 			+ "from events_all_data "
 			+ "where funder_id is not null "
-			+ "and publisher_id = ? "
+			+ "and FIND_IN_SET(publisher_id, ?) "
 			+ "order by funder_name",
 			new BeanPropertyRowMapper<>(Funder.class),
-			new Object[] { publisherId }
+			new Object[] { publisherIds }
 		);
 	}	
 	
@@ -214,16 +214,16 @@ public class LookupRepository {
 	}
 
 	
-	@Cacheable(value="lookupCache", key="'publishers-fund-'+#funderId")
-	public List<Publisher> publishers(String funderId) {
+	@Cacheable(value="lookupCache", key="'publishers-fund-'+#funderIds")
+	public List<Publisher> publishers(String funderIds) {
 		
 		return jdbcTemplate.query(
 			"select distinct publisher_id as id, publisher_name as name "
 			+ "from events_all_data "
-			+ "where funder_id is not null and publisher_id is not null "
-			+ "and funder_id = ? order by publisher_name", 
+			+ "where funder_id is not null and publisher_id is not null and publisher_name is not null "
+			+ "and FIND_IN_SET(funder_id, ?) order by publisher_name", 
 			new BeanPropertyRowMapper<>(Publisher.class),
-			new Object[] { funderId }
+			new Object[] { funderIds }
 		);
 		
 	}

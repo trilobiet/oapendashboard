@@ -21,13 +21,14 @@
                 <v-spacer></v-spacer>
                 
                 <!-- Edit User Dialog ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-                <v-dialog v-model="dialog" max-width="50%">
+                <v-dialog v-model="dialog" width="1024" max-width="90%" scrollable>
                 
                   <template v-slot:activator="{ on, attrs }">
                     <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on">New User</v-btn>
                   </template>
 
-                  <user-form :item="editedItem" :title="formTitle" @cancel="cancel" @save="saveUser" :isOpen="dialog"
+                  <user-form :item="editedItem" @cancel="cancel" @save="saveUser" :isOpen="dialog"
+                    :title="formTitle" :headerIcon="iconForRole(editedItem.role)" :headerColor="colorForRole(editedItem.role)"
                     :takenUsernames="userNames" />
 
                 </v-dialog>
@@ -45,7 +46,9 @@
 
               <v-card-text> 
 
-                <v-data-table :sort-by="['role','fullname']"
+                <!-- single-expand show-expand item-key="username" -->  
+                <v-data-table 
+                  :sort-by="['role','fullname']"
                   :loading="loading" :search="tableSearch" 
                   :headers="headers" :items="items"   
                   :footer-props="{'items-per-page-options': [10, 25, 50, 100, -1]}"
@@ -57,8 +60,20 @@
                     >{{item.fullname}}</span>
                   </template> 
 
+                  <template v-slot:item.ipCount="{ item }">
+                    <v-chip :color="'#ccf3f6'" light v-if="item.ipRanges.length">
+                      {{ item.ipRanges.length }}
+                    </v-chip>
+                  </template> 
+
                   <template v-slot:item.geoLocation="{ item }">
-                    <span v-html="geoLink(item)"></span>
+                    <!--<span v-html="geoLink(item)"></span>-->
+                    <span v-if="hasGeoLocation(item)">
+                        <a :href="geoUrl(item)" style="text-decoration:none;color:#073" target="blank" title="Show me a map">
+                          <v-icon small>mdi-earth</v-icon>
+                        {{item.geoLocation.lat}}, {{item.geoLocation.lon}}
+                        </a>
+                    </span>  
                   </template> 
 
                   <template v-slot:item.irusIds="{ item }">
@@ -79,6 +94,13 @@
                       :class="hover?'red--text text--darken-3':'gray--text'">mdi-close-circle-outline</v-icon>
                     </v-hover>  
                   </template>
+
+                  <!--
+                  <template v-slot:expanded-item="{ headers, item }">
+                    <td :colspan="headers.length"  v-if="item.role=='library'">
+                      bla bla bla 
+                    </td>
+                  </template> -->
 
                   <template v-slot:no-data>
                     No data available. Your session may have expired.
@@ -128,6 +150,7 @@ export default {
       dialog: false,
       dialogDelete: false,      
       dialogError: false, 
+      dialogSaved: false, 
       dialogErrorDetail: "",     
       headers: [],
       items:[], 
@@ -158,7 +181,9 @@ export default {
   
   computed: {
     formTitle() {
-      return this.editedIndex === -1 ? 'New User' : 'Edit User'
+      return this.editedIndex === -1 
+        ? 'new user'  
+        : this.editedItem.username 
     },
 
     userNames() {
@@ -188,12 +213,23 @@ export default {
       else return 'mdi-hand-coin'
     },
 
+    hasGeoLocation(item) {
+      return item.geoLocation && item.geoLocation.lat != 0 && item.geoLocation.lon != 0
+    },
+
+    geoUrl(item) {
+
+        if( this.hasGeoLocation(item) )
+          return 'https://www.openstreetmap.org?mlat='
+            + item.geoLocation.lat + '&mlon=' + item.geoLocation.lon 
+        else
+          return ''
+    },
+
     geoLink(item) {
 
-        if( item.geoLocation && item.geoLocation.lat != 0 && item.geoLocation.lon != 0)
-          return  '<a href="https://www.openstreetmap.org?mlat='
-            + item.geoLocation.lat + '&mlon=' + item.geoLocation.lon 
-            + '" target="_blank">'
+        if( this.hasGeoLocation(item) )
+          return '<a href="' + this.geoUrl(item) + '" target="_blank">'
             + item.geoLocation.lat+ ', ' + item.geoLocation.lon        
             + '</a>' 
         else
@@ -219,9 +255,10 @@ export default {
         { text: "Name", value: "fullname" },
         { text: "Username", value: "username" },
         { text: "IRUS Ids", value: "irusIds" },
+        { text: "Ip Ranges", value: "ipCount" },
         { text: "Country Code", value: "countryCode", cellClass: "td-title" },
         { text: "Location", value: "geoLocation" },
-        { text: 'Actions', value: 'actions', sortable: false },
+        { text: 'Remove', value: 'actions', sortable: false },
       ];
 
       return arr;
@@ -281,6 +318,7 @@ export default {
             this.items.push(this.editedItem)
             this.editedItem.id = resp.data.id
           }  
+          this.dialogSaved = true;
         })
         .catch( err => {
           console.log(err.response)

@@ -7,9 +7,13 @@
   >
     <v-card>
 
-      <v-card-title>
-        <span class="text-h5">{{ title }}</span>
+      <v-card-title class="white--text" :style="'background-color:'+headerColor"> 
+        <span class="text-h5">
+          <v-icon dark large>{{headerIcon}}</v-icon> {{ title }}
+        </span>
       </v-card-title>
+
+      <v-divider></v-divider>
 
       <v-card-text>
 
@@ -19,25 +23,43 @@
               <v-text-field v-model="item.username" label="User name" :rules="validation.username"
                :disabled="!isNewItem"></v-text-field>
             </v-col>
-            <v-col cols="1">
-              <v-switch v-model="setPassword"></v-switch>
-            </v-col>
-            <v-col cols="3">
-              <v-text-field v-model="item.password" label="Password" :rules="validation.password" v-if="setPassword"></v-text-field>
-              <v-text-field v-else label="Set password" disabled></v-text-field>
-              <v-btn color="blue darken-1" text @click="generatePassword">NEW</v-btn>
-            </v-col>
-            <v-col cols="12" sm="6" md="4">
-              <v-text-field v-model="item.fullname" label="Full name" :rules="validation.fullName"></v-text-field>
-            </v-col>
             <v-col cols="12" sm="6" md="4">
               <v-select v-model="item.role" :items="roles" label="Role" :rules="validation.role" 
                :disabled="!isNewItem" />
             </v-col>
+            <v-col cols="12" sm="6" md="4">
+              <v-text-field v-model="item.fullname" label="Full name" :rules="validation.fullName"></v-text-field>
+            </v-col>
+          </v-row>  
+          <v-row>  
+            <v-col cols="12" sm="6" md="4">
+              <v-row>
+
+                <v-col v-if="isNewItem"> <!-- -->
+                  <v-text-field v-model="item.password" label="Password" :rules="validation.password"
+                    append-icon="mdi-auto-fix" @click:append="generatePassword"></v-text-field>
+                </v-col>
+
+                <v-col v-if="!isNewItem">
+                  <v-text-field v-model="item.password" label="Password" :rules="validation.password" v-if="setPassword"
+                    append-icon="mdi-auto-fix" @click:append="generatePassword"></v-text-field>
+                  <v-text-field v-else label="Set password" disabled><!-- just a 'label' --></v-text-field>
+                </v-col>
+                <v-col cols="4" v-if="!isNewItem">
+                  <v-switch v-model="setPassword" inset></v-switch>
+                </v-col>  
+
+              </v-row> 
+            </v-col>
+            <v-col cols="12" sm="6" md="4">
+              <span class="caption">
+                Passwords are one-way encrypted and will only be visible on creation!
+              </span>
+            </v-col>  
           </v-row>  
           <v-row v-if="item.role == 'library'">  
             <v-col cols="12" sm="6" md="4">
-              <v-autocomplete v-model="item.countryCode" :items="countries"
+              <v-autocomplete v-model="item.countryCode" :items="countries" validate-on-blur
                 item-text="name" item-value="code" label="Country" persistent-hint :rules="validation.country"> 
                 <template slot="item" slot-scope="data">
                   {{ data.item.name }}&nbsp;({{ data.item.code }})
@@ -45,7 +67,8 @@
               </v-autocomplete>
             </v-col>
             <v-col cols="12" sm="6" md="4">
-              <v-text-field :value="geoToCoords(item.geoLocation)" label="Location" @change="coordsToGeo" :rules="validation.geo"></v-text-field>
+              <v-text-field :value="geoToCoords(item.geoLocation)" label="Location" @change="coordsToGeo" :rules="validation.geo"
+               append-icon="mdi-earth" @click:append="openMap(item.geoLocation)"></v-text-field>
             </v-col>
           </v-row>
           <v-row v-if="item.role == 'library'">    
@@ -53,7 +76,7 @@
               <v-textarea :value="ipRangesToText(item.ipRanges)" label="Ip Ranges" @change="textToIpRanges" :rules="validation.ipranges"
                rows="8"></v-textarea>
             </v-col>
-            <v-col cols="4">
+            <v-col cols="4" class="caption">
               <h4>Ip Ranges example</h4>
               <p>
               132.100.234.55 - 134.10.234.55<br>
@@ -62,7 +85,7 @@
               </p>
               <ul>
                 <li>Each range on a new line;</li>
-                <li>A range always consists of 2 ip adresses, but they can be identical for a single ip;</li>
+                <li>A range always consists of 2 ip adresses, but they can be identical to set a single ip;</li>
                 <li>Within a range ip adresses are separated by '&nbsp;-&nbsp;' (space+dash+space);</li>
                 <li>Only ip4 addresses are allowed.</li>
               </ul>  
@@ -70,32 +93,38 @@
           </v-row>
           <v-row v-if="item.role == 'publisher'">
             <v-col cols="12" sm="6" md="4">
-              <v-autocomplete v-model="item.irusIds" :items="publishers" multiple
+              <v-autocomplete v-model="item.irusIds" :items="publishers" multiple validate-on-blur
                 item-text="name" item-value="id" label="Publisher(s)" :rules="validation.publishers"/>
             </v-col>  
           </v-row>  
           <v-row v-if="item.role == 'funder'">
             <v-col cols="12" sm="6" md="4">
-              <v-autocomplete v-model="item.irusIds" :items="funders" multiple
+              <v-autocomplete v-model="item.irusIds" :items="funders" multiple validate-on-blur
                 item-text="name" item-value="id" label="Funder(s)" :rules="validation.funders"/>
             </v-col>  
           </v-row>  
+
         </v-container>
 
       </v-card-text>
 
-      <v-card-actions>
+      <v-divider></v-divider>
+
+      <v-card-actions class="blue-grey lighten-5" >
         <v-container>
-          <v-row>
-            <v-col align="right">
-              <div class="text-caption red--text" v-if="!isValidForm">
+          <v-row >
+            <v-col>
+              <span class="text-left red--text caption" v-if="!isValidForm">
+                <v-icon color="red" >mdi-alert-circle-outline</v-icon>
                 Please fix validation issues before saving
-              </div>
-              <v-btn color="blue darken-1" text @click="cancel">Cancel</v-btn>
-              <v-btn color="blue darken-1" text @click="save" :disabled="!isValidForm">Save</v-btn>
+              </span>
             </v-col>
-          </v-row>
-        </v-container>  
+            <v-col class="text-right">
+                <v-btn color="blue darken-3" text @click="cancel">Cancel</v-btn>
+                <v-btn color="blue darken-3" text @click="save" :disabled="!isValidForm">Save</v-btn>
+            </v-col>
+          </v-row>   
+        </v-container>
       </v-card-actions>
 
     </v-card>
@@ -114,6 +143,8 @@
         item: {type: Object, default: null},
         title: {type: String, default: ''},
         takenUsernames: {type: Array, default: ()=>[]},
+        headerColor: {type: String, default: 'gray'},
+        headerIcon: {type: String, default: 'mdi-account-edit'},
     },
 
     data() {
@@ -169,7 +200,7 @@
           ],
           password: [
             v => !!v || 'Password is required',
-            v => (v && v.length >= 6) || 'Password must contain at least 8 characters',
+            v => (v && v.trim().length >= 6) || 'Password must contain at least 8 characters',
             v => (v && v.length <= 255) || 'Password cannot be longer than 255 characters',
           ],
           role: [
@@ -232,6 +263,14 @@
         const geo = { "lat": nlat, "lon": nlon }
 
         this.item.geoLocation = geo
+      },
+
+      openMap(geo) {
+
+        const url = 'https://www.openstreetmap.org?mlat='
+          + geo.lat + '&mlon=' + geo.lon 
+
+         window.open(url, "_blank");     
       },
 
       ipRangesToText(val) {

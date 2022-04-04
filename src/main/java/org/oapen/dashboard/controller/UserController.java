@@ -2,7 +2,6 @@ package org.oapen.dashboard.controller;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.oapen.dashboard.management.User;
 import org.oapen.dashboard.management.UserRepository;
@@ -51,8 +50,7 @@ public class UserController {
     @GetMapping("/user")
     public User user() {
     	User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    	System.out.println(user.getAuthorities());
-
+    	// System.out.println(user.getAuthorities());
     	return user;
     }
     
@@ -82,7 +80,7 @@ public class UserController {
     		Optional<String> oldPw = userRepository.findByUsername(username).map(u -> u.getPassword());
     		if (oldPw.isPresent()) user.setPassword(oldPw.get());
     	}
-    	// But when a new password is sent with the form, then encryopt it and put it in the user.
+    	// But when a new password is sent with the form, then encrypt it and put it in the user.
     	else {
     		BCryptPasswordEncoder enc = new BCryptPasswordEncoder();
     		user.setPassword(enc.encode(newPw));
@@ -97,14 +95,19 @@ public class UserController {
     @PostMapping("/delete-user")
 	public void delete(@RequestBody User user) {
     	
-    	// Content-type: application/json
-    	// Sample request body:
-    	// {"id":"6145e100-82b1-11ec-a8a3-0242ac120002","irusId":"","name":"Nord Universitet","countryCode":"NO","role":"library","geoLocation":{"lat":67.288889,"lon":14.560278}}
-    	
     	userRepository.delete(user);
 	}
 
     
+    /**
+     * Returns OK if the user still has a session
+     * 
+     * @return
+     */
+    @GetMapping("/session")
+    public String session() {
+    	return "OK";
+    }
     
     
 }

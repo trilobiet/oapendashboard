@@ -30,10 +30,10 @@
       </v-navigation-drawer>    
 
       <downloads-per-title-for-funder v-if="activeSheet=='downloadsPerTitle'"
-        :rel-ids="this.user.irusId" />
+        :rel-ids="this.user.urlIrusIds" />
 
       <downloads-per-country v-if="activeSheet=='downloadsPerCountry'"
-        :rel-ids="this.user.irusId" :rel-type="'funder'"/>
+        :rel-ids="this.user.urlIrusIds" :rel-type="'funder'"/>
          
   </div>
 

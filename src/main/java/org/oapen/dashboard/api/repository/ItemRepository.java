@@ -25,7 +25,7 @@ public class ItemRepository {
 	}
 	
 	// Do not cache
-	public List<Item> findByTitleForPublisher(String title, String publishers) {
+	public List<Item> findByTitleForPublishers(String title, String publishers) {
 		
 		List<Item> lst = jdbcTemplate.query(
 			"select * from item where title like ? and FIND_IN_SET(publisher_id, ?)", 
@@ -37,7 +37,7 @@ public class ItemRepository {
 	}
 	
 	// Do not cache	
-	public List<Item> findByTitleForFunder(String title, String funders) {
+	public List<Item> findByTitleForFunders(String title, String funders) {
 		
 		List<Item> lst = jdbcTemplate.query(
 			"select * from item join "

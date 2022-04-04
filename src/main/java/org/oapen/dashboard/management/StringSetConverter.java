@@ -12,9 +12,15 @@ import javax.persistence.Converter;
 import org.apache.commons.lang3.StringUtils;
 
 
-
+/**
+ * Converts a comma separated string to a Set and vice versa.
+ * 
+ * @author acdhirr
+ *
+ */
 @Converter
 public class StringSetConverter implements AttributeConverter<Set<String>, String> {
+	
     private static final String SPLIT_CHAR = ",";
     
     @Override

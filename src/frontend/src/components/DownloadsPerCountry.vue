@@ -19,7 +19,7 @@
               item-text="text" item-value="value" label="Item type" />
       </v-col>
       <v-col cols="6" md="2">
-          <item-select v-model="currentItem" :relType="relType" :relId="relId" />
+          <item-select v-model="currentItem" :relType="relType" :relIds="relIds" />
       </v-col>
 
       <v-spacer/>
