@@ -47,7 +47,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 
 		http
-			.cors().and()
+			//.cors().and()
 			.csrf().disable()
 			.authorizeRequests()
 				.anyRequest().authenticated()
@@ -63,6 +63,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 	
     @Bean
+    // Enable cors in configure method to use
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         // Enable cors for localhost (development uses another domain/port)

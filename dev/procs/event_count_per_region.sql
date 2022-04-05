@@ -26,7 +26,7 @@ BEGIN
     set mradius = radius * 1000; # radius in meter
     # rough square area to limit exact searches 
     # (chosen large enough to account for longitude scaling towards the equator) 
-    set crudeSquare = radius / 25; 
+    set crudeSquare = greatest(2, radius / 25); 
 
 	select  
 		city, country_code, latitude, longitude, requests

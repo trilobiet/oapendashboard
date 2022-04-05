@@ -38,7 +38,7 @@
         :rel-id="this.user.id" />
 
       <downloads-per-title-for-region v-if="activeSheet=='downloadsPerTitleRegion'" 
-        :rel-geo="this.user.geoLocation"/>
+        :geo="this.user.geoLocation" :radius="this.user.initialRadius" />
 
   </div>
 

@@ -55,6 +55,7 @@ public class User implements UserDetails, Serializable {
 	@Column(name="id", columnDefinition = "VARCHAR(36)")	
     private UUID id;	
 	private String username, fullname, countryCode, role;
+	private int initialRadius;
 	@Embedded
 	private GeoLocation geoLocation;
 	

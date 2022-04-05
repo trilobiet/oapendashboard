@@ -46,7 +46,7 @@
   <v-container fluid>
     <v-row>
         <v-col>
-          <stacked-bar-chart :rows="25" :items="items" categoriesField="title" 
+          <stacked-bar-chart :rows="maxRows" :items="items" categoriesField="title" 
             :title="chartTitle" />
         </v-col>  
     </v-row>
@@ -69,6 +69,7 @@ export default {
   
   data() {
     return {
+      maxRows: 25,
       loading: true,
       headers: [],
       items:[], 
@@ -76,14 +77,14 @@ export default {
       currentCountry: {name:"",code:""},
       currentItemType: "",
       currentFunderFilter: {name:"",id:""},
-      reportTitle: "Number of Successful Title Requests per Month and Title"
+      reportTitle: "Number of successful title requests per month and title"
     }    
   },
   
   computed: {
 
     chartTitle() {
-      return `Requests per title per month until ${this.currentMonth}` 
+      return `Top ${Math.min(this.items.length,this.maxRows)} requests per month and title until ${this.currentMonth}` 
     },
   },
 
@@ -120,7 +121,7 @@ export default {
         { text: "Title", value: "title", cellClass: "td-title" },
         { text: "Doi", value: "doi" },
         { text: "Funder", value: "funders" },
-        { text: "Doc. type", value: "type" },
+        { text: "Item type", value: "type" },
         { text: "Year total", value: "total", align:"right" }
       ];
 
@@ -137,9 +138,9 @@ export default {
     getRequestString() {
  
       let s = 'month='+this.currentMonth+'&publisher-id='+ this.relIds.join(",");
-      if(this.currentCountry.code) s += '&country-code=' + this.currentCountry.code
-      if(this.currentItemType.value) s += '&item-type=' + this.currentItemType.value
-      if(this.currentFunderFilter.id) s += '&funder-id=' + this.currentFunderFilter.id
+      if(this.currentCountry && this.currentCountry.code) s += '&country-code=' + this.currentCountry.code
+      if(this.currentItemType && this.currentItemType.value) s += '&item-type=' + this.currentItemType.value
+      if(this.currentFunderFilter && this.currentFunderFilter.id) s += '&funder-id=' + this.currentFunderFilter.id
       // console.log("RequestString: " + s)
       return s;
     },

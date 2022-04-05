@@ -73,6 +73,7 @@
                           <v-icon small>mdi-earth</v-icon>
                         {{item.geoLocation.lat}}, {{item.geoLocation.lon}}
                         </a>
+                        ({{item.initialRadius}}&nbsp;km)
                     </span>  
                   </template> 
 
@@ -164,6 +165,7 @@ export default {
         irusIds: [],
         countryCode: '',
         geoLocation: {'lat':'0.0','lon':'0.0'},
+        initialRadius: 50,
         ipRanges: []
       },
       defaultItem: {
@@ -174,6 +176,7 @@ export default {
         irusIds: [],
         countryCode: '',
         geoLocation: {'lat':'0.0','lon':'0.0'},
+        initialRadius: 50,
         ipRanges: []
       },   
     }    
@@ -257,7 +260,7 @@ export default {
         { text: "IRUS Ids", value: "irusIds" },
         { text: "Ip Ranges", value: "ipCount" },
         { text: "Country Code", value: "countryCode", cellClass: "td-title" },
-        { text: "Location", value: "geoLocation" },
+        { text: "Area", value: "geoLocation" },
         { text: 'Remove', value: 'actions', sortable: false },
       ];
 

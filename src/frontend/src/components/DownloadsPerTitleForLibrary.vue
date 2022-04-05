@@ -45,7 +45,7 @@
   <v-container fluid>
     <v-row class="d-flex">
         <v-col>
-          <stacked-bar-chart :rows="25" :items="items" categoriesField="title"
+          <stacked-bar-chart :rows="maxRows" :items="items" categoriesField="title"
             :title="chartTitle" />
         </v-col>  
     </v-row>
@@ -69,6 +69,7 @@ export default {
   
   data() {
     return {
+      maxRows: 25,
       loading: true,
       usertype: '',
       headers: [],
@@ -78,14 +79,14 @@ export default {
       currentFunderFilter: {name:"",id:""},
       currentPublisherFilter: {name:"",id:""},
       currentItemId: "",
-      reportTitle: 'Number of Successful Title Requests per Month and Title for Library',
+      reportTitle: 'Number of successful title requests per month and title for library (on site)',
     }    
   },
 
   computed: {
 
     chartTitle() {
-      return `Requests per country per month until ${this.currentMonth}` 
+      return `Top ${Math.min(this.items.length,this.maxRows)} requests per country per month until ${this.currentMonth}` 
     },
   },
   
@@ -124,7 +125,7 @@ export default {
         { text: "Doi", value: "doi" },
         { text: "Publisher", value: "publisherName" },
         { text: "Funding", value: "funders" },
-        { text: "Doc. type", value: "type" },
+        { text: "Item type", value: "type" },
         { text: "Year total", value: "total", align:"right" }
       ];
 
@@ -141,9 +142,9 @@ export default {
     getRequestString() {
  
       let s = 'month='+this.currentMonth+'&library-id='+this.relId; 
-      if(this.currentItemType.value) s += '&item-type=' + this.currentItemType.value
-      if(this.currentFunderFilter.id) s += '&funder-id=' + this.currentFunderFilter.id
-      if(this.currentPublisherFilter.id) s += '&publisher-id=' + this.currentPublisherFilter.id
+      if(this.currentItemType && this.currentItemType.value) s += '&item-type=' + this.currentItemType.value
+      if(this.currentFunderFilter && this.currentFunderFilter.id) s += '&funder-id=' + this.currentFunderFilter.id
+      if(this.currentPublisherFilter && this.currentPublisherFilter.id) s += '&publisher-id=' + this.currentPublisherFilter.id
       if(this.currentItemId) s += '&item-id=' + this.currentItemId
       // console.log("RequestString: " + s)
       return s;

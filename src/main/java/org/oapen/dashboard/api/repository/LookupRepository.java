@@ -170,7 +170,7 @@ public class LookupRepository {
 	@Cacheable(value="lookupCache", key="'funders-pub-'+#publisherId")
 	public List<Funder> funders(String publisherIds) {
 
-		return jdbcTemplate.query(
+		return cleanUpFunders(jdbcTemplate.query(
 			"select distinct funder_id as id, funder_name as name "
 			+ "from events_all_data "
 			+ "where funder_id is not null "
@@ -178,7 +178,7 @@ public class LookupRepository {
 			+ "order by funder_name",
 			new BeanPropertyRowMapper<>(Funder.class),
 			new Object[] { publisherIds }
-		);
+		));
 	}	
 	
 		

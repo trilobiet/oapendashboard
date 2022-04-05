@@ -6,7 +6,7 @@
         <v-overlay :value="loading" :absolute="true">loading...</v-overlay>
         <bubble-map 
             :points="bubbleMapPoints(points)" 
-            :centerLocation="relGeo"
+            :centerLocation="geo"
             :initialZoom="zoom"
             :minZoom="5"
             :maxZoom="14"
@@ -26,7 +26,7 @@ export default {
   
   props: {
     month: {type: String, default: null},
-    relGeo: {type: Object, default: null },
+    geo: {type: Object, default: null },
     radius: {type: Number, default: 50},
     funderFilter: {type: Object, default(){ return {name:"",id:""} } },
     publisherFilter: {type: Object, default(){ return {name:"",id:""} } },
@@ -81,15 +81,15 @@ export default {
     
     getRequestString() {
 
-      const startMonth = this.$func.yearBefore(this.month)  
-      console.log("SM " + startMonth)
- 
+      const startMonth = this.$func.twelveMonthsBack(this.month)  
+      console.log("twelveMonthsBack = " + startMonth)
+
       let s = 'startmonth='+startMonth+'&endmonth='+this.month
-              +'&latitude='+this.relGeo.lat+'&longitude='+this.relGeo.lon
+              +'&latitude='+this.geo.lat+'&longitude='+this.geo.lon
               +'&radius='+this.radius+'&precision='+this.precision; 
-      if(this.itemType.value) s += '&item-type=' + this.itemType.value
-      if(this.funderFilter.id) s += '&funder-id=' + this.funderFilter.id
-      if(this.publisherFilter.id) s += '&publisher-id=' + this.publisherFilter.id
+      if(this.itemType && this.itemType.value) s += '&item-type=' + this.itemType.value
+      if(this.funderFilter && this.funderFilter.id) s += '&funder-id=' + this.funderFilter.id
+      if(this.publisherFilter && this.publisherFilter.id) s += '&publisher-id=' + this.publisherFilter.id
       // console.log("Events Per Region RequestString: " + s)
       return s;
     },

@@ -70,6 +70,9 @@
               <v-text-field :value="geoToCoords(item.geoLocation)" label="Location" @change="coordsToGeo" :rules="validation.geo"
                append-icon="mdi-earth" @click:append="openMap(item.geoLocation)"></v-text-field>
             </v-col>
+            <v-col cols="12" sm="6" md="4">
+               <v-select v-model="item.initialRadius" :items="radii" item-text="text" item-value="value" label="Initial radius of area (km)" />
+            </v-col>
           </v-row>
           <v-row v-if="item.role == 'library'">    
             <v-col cols="8">
@@ -156,7 +159,14 @@
         publishers: this.$store.getters.getSinglePublishers,
         funders: this.$store.getters.getSingleFunders,
         editedUser: "",
-      }    
+        radii: [
+          {value:20, text:"20 km"},
+          {value:50, text:"50 km"},
+          {value:100, text:"100 km"},
+          {value:250, text:"250 km"},
+          {value:500, text:"500 km"}
+        ]
+      }      
     },
 
     watch: {
@@ -236,7 +246,7 @@
 
         if(this.$refs.userForm.validate()) {
         // if (this.isValidForm) {
-          console.log("VALIDATION PASSED!")
+          console.log("VALIDATION PASSED! " + JSON.stringify(this.item))
           this.$emit('save')
         }  
         else {

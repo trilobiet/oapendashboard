@@ -50,11 +50,11 @@
   <v-container fluid>
     <v-row class="d-flex">
         <v-col cols="12" lg="6" class="flex-grow-1">
-          <stacked-bar-chart :rows="25" :items="items" categoriesField="title"
+          <stacked-bar-chart :rows="maxRows" :items="items" categoriesField="title"
             :title="chartTitle" />
         </v-col>  
         <v-col cols="12" lg="6" class="flex-grow-1">
-          <events-per-region :relGeo="relGeo" :radius="currentRadius.value"
+          <events-per-region :geo="geo" :radius="currentRadius.value"
             :month="currentMonth"
             :funderFilter="currentFunderFilter" :publisherFilter="currentPublisherFilter"
             :itemType="currentItemType" 
@@ -76,12 +76,13 @@ export default {
   components: { MyDataTable, StackedBarChart, EventsPerRegion },
   
   props: {
-    relId: {type: String, default:''},
-    relGeo: {type: Object, default:null }
+    geo: {type: Object, default: null },
+    radius: {type: Number, default: 0}
   },
   
   data() {
     return {
+      maxRows: 25,
       loading: true,
       headers: [],
       items:[], 
@@ -95,19 +96,19 @@ export default {
         {value:100, text:"100 km"},
         {value:250, text:"250 km"},
         {value:500, text:"500 km"}
-      ],
-      currentRadius:{value:50, text:"50 km"},      
+      ],      
+      currentRadius:{value:this.radius, text:"50 km"}
     }    
   },
 
   computed: {
 
     reportTitle() {
-      return `Number of Successful Title Requests per Month and Title for Region (distance ${this.currentRadius.value} km)`
+      return `Number of successful title requests per month and title for library and region with distance ${this.currentRadius.value} km)`
     },
 
     chartTitle() {
-      return `Requests per title per month until ${this.currentMonth}` 
+      return `Top ${Math.min(this.items.length,this.maxRows)} requests per title per month until ${this.currentMonth}` 
     },
   },
   
@@ -120,7 +121,7 @@ export default {
      currentItemType:'callApi',
      currentFunderFilter:'callApi',
      currentPublisherFilter:'callApi',
-     currentRadius:['callApi','setTitle']
+     currentRadius:['callApi']
   },
   
   methods: {
@@ -146,7 +147,7 @@ export default {
         { text: "Doi", value: "doi" },
         { text: "Publisher", value: "publisherName" },
         { text: "Funding", value: "funders" },
-        { text: "Doc. type", value: "type" },
+        { text: "Item type", value: "type" },
         { text: "Year total", value: "total", align:"right" }
       ];
 
@@ -162,11 +163,11 @@ export default {
     
     getRequestString() {
  
-      let s = 'month='+this.currentMonth+'&latitude='+this.relGeo.lat
-              +'&longitude='+this.relGeo.lon+'&radius='+this.currentRadius.value; 
-      if(this.currentItemType.value) s += '&item-type=' + this.currentItemType.value
-      if(this.currentFunderFilter.id) s += '&funder-id=' + this.currentFunderFilter.id
-      if(this.currentPublisherFilter.id) s += '&publisher-id=' + this.currentPublisherFilter.id
+      let s = 'month='+this.currentMonth+'&latitude='+this.geo.lat
+              +'&longitude='+this.geo.lon+'&radius='+this.currentRadius.value; 
+      if(this.currentItemType && this.currentItemType.value) s += '&item-type=' + this.currentItemType.value
+      if(this.currentFunderFilter && this.currentFunderFilter.id) s += '&funder-id=' + this.currentFunderFilter.id
+      if(this.currentPublisherFilter && this.currentPublisherFilter.id) s += '&publisher-id=' + this.currentPublisherFilter.id
       console.log("RequestString: " + s)
       return s;
     },
