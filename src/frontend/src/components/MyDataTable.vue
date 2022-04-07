@@ -20,7 +20,18 @@
             :loading="loading" :loading-text="loadingText" :search="tableSearch" 
             :headers="headers" :items="items"   
             :footer-props="{'items-per-page-options': [10, 25, 50, 100, -1]}"
-            calculate-widths />
+            calculate-widths>
+
+            <!-- if there is an oapen id, make it a linbk to the library -->
+            <template v-slot:item.id="{ item }">
+                <a :href="`https://library.oapen.org/handle/${item.id}`" target="oapen_library">
+                  {{ item.id }}
+                  <v-icon x-small>mdi-open-in-new</v-icon>
+                </a>
+                
+            </template>
+
+          </v-data-table>  
         </v-card-text>
     </v-card>    
 
@@ -42,8 +53,26 @@ export default {
   data() {
     return {
       tableSearch: '',
-      loadingText: 'Loading... \n(Preparing new reports may take up to a few minutes)'
+      loadingText: 'Loading... (preparing new reports may take up to a few minutes)'
     }
   }  
 }
 </script>
+
+<style scoped>
+
+  a {
+    text-decoration: none;
+    color: navy;
+  }
+
+  a .v-icon {
+    opacity: 0;  
+    transition: opacity 500ms;
+  }
+
+  .v-data-table tr:hover .v-icon {
+    opacity: 1;  
+  }  
+
+</style>

@@ -24,9 +24,9 @@
 
     <div class="oa-map-wrapper">
 
-      <v-map :center="centerLocation" 
+      <v-map ref="mapRef" :options="mapOptions" 
         :zoom="initialZoom" :minZoom="minZoom" :maxZoom="maxZoom" 
-        :options="mapOptions"
+        :center="centerLocation"
       >
       
         <v-tile-layer url="https://{s}.tile.osm.org/{z}/{x}/{y}.png" :attribution="attribution" />
@@ -34,7 +34,7 @@
         <v-control-zoom position="bottomright" />
         <v-control class="oa-map-caption" position="topleft">{{title}}</v-control>
 
-        <v-marker-cluster :options="clusterOptions" ref="clusterRef">
+        <v-marker-cluster ref="clusterRef" :options="clusterOptions">
           <v-marker
             v-for="point in points"
             :key="getKey(point)"
@@ -102,6 +102,8 @@ export default {
     console.log(`MAXWEIGHT: ${this.maxWeight}, SCALING: ${this.scalingFactor}`)
     // data changed, redraw 
     this.$refs.clusterRef.mapObject.refreshClusters()
+    // data changed, re-center
+    this.$refs.mapRef.mapObject.panTo(this.centerLocation)
   },
 
   methods: {

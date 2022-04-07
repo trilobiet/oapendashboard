@@ -1,4 +1,25 @@
 
+Building:
+=========
 Stop running application!
 
+For production:
 mvn clean install -Pprod
+
+For local deployment:
+mvn clean install -Pprod
+
+You may need to unlock the ehcache directory at 
+/tmp/ehcache/oapendashboard 
+(throw away .lock)
+
+
+Installation:
+=============
+Restart service after installation (=copy jar to deployment)
+
+- systemctl stop irus-dashboard.service
+- systemctl start irus-dashboard.service
+
+logs can be found in 
+/var/log/irus-dashboard.log

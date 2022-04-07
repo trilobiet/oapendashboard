@@ -85,7 +85,7 @@ export default {
   computed: {
 
     chartTitle() {
-      return `Top ${Math.min(this.items.length,this.maxRows)} requests per month and title until ${this.currentMonth}` 
+      return `Top ${Math.min(this.items.length,this.maxRows)} requests per month and title up to ${this.currentMonth}` 
     },
   },
   
@@ -117,7 +117,7 @@ export default {
     getHeaders(json) {
 
       let arr = [
-        { text: "OAPEN link", value: "id" },
+        { text: "OAPEN id", value: "id" },
         { text: "Isbn", value: "isbn" },
         { text: "Title", value: "title", cellClass: "td-title" },
         { text: "Doi", value: "doi" },

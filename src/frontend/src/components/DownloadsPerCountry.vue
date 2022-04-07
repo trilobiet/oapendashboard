@@ -102,11 +102,11 @@ export default {
   computed: {
 
     chartTitle() {
-      return `Top ${Math.min(this.items.length,this.maxRows)} requests per country per month until ${this.currentMonth}` 
+      return `Top ${Math.min(this.items.length,this.maxRows)} requests per country per month up to ${this.currentMonth}` 
     },
 
     mapTitle() {
-      return `Yearly requests until ${this.currentMonth}` 
+      return `Year total requests up to ${this.currentMonth}` 
     }
   },
   

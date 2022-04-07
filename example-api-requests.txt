@@ -1,4 +1,6 @@
 
+# You must login first to be able to get data
+
 Requests grouped by title and split over 12 months before requested month, for funder 'Leverhulme Trust' 
 https://oapen-stats.trilobiet.eu/api/eventcount-per-item?month=2021-12&funder-id=288fb6b7-e23c-43d3-9a84-ad058a42edb5
 

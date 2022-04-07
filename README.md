@@ -19,15 +19,15 @@ Finally run `sudo systemctl daemon-reload` to activate the service.
 
 
 - **Start service:**  
-sudo systemctl start your-service.service  
+sudo systemctl start irus-dashboard.service
 - **Stop service:**  
-sudo systemctl start your-service.service    
+sudo systemctl stop irus-dashboard.service    
 - **Check service status:**  
-sudo systemctl status example.service  
+sudo systemctl status irus-dashboard.service
 - **Enable service on reboot:**  
-sudo systemctl enable example.service  
+sudo systemctl enable irus-dashboard.service
 - **Disable service reboot:**  
-sudo systemctl disable example.service  
+sudo systemctl disable irus-dashboard.service
 
 
 That's all folks.

@@ -67,8 +67,8 @@
               </v-autocomplete>
             </v-col>
             <v-col cols="12" sm="6" md="4">
-              <v-text-field :value="geoToCoords(item.geoLocation)" label="Location" @change="coordsToGeo" :rules="validation.geo"
-               append-icon="mdi-earth" @click:append="openMap(item.geoLocation)"></v-text-field>
+              <v-text-field :value="geoToCoords(item.geoLocation)" label="Location" @change="coordsToGeo" :rules="validation.geo" 
+               append-icon="mdi-earth" @click:append="openMap(item.geoLocation)" hint="Click icon to view on map" persistent-hint></v-text-field>
             </v-col>
             <v-col cols="12" sm="6" md="4">
                <v-select v-model="item.initialRadius" :items="radii" item-text="text" item-value="value" label="Initial radius of area (km)" />
@@ -77,7 +77,7 @@
           <v-row v-if="item.role == 'library'">    
             <v-col cols="8">
               <v-textarea :value="ipRangesToText(item.ipRanges)" label="Ip Ranges" @change="textToIpRanges" :rules="validation.ipranges"
-               rows="8"></v-textarea>
+               rows="8" outlined filled ></v-textarea>
             </v-col>
             <v-col cols="4" class="caption">
               <h4>Ip Ranges example</h4>
@@ -88,22 +88,42 @@
               </p>
               <ul>
                 <li>Each range on a new line;</li>
-                <li>A range always consists of 2 ip adresses, but they can be identical to set a single ip;</li>
-                <li>Within a range ip adresses are separated by '&nbsp;-&nbsp;' (space+dash+space);</li>
-                <li>Only ip4 addresses are allowed.</li>
+                <li>A range always consists of 2 ip addresses, but they can be identical to set a single ip;</li>
+                <li>Within a range ip addresses are separated by '&nbsp;-&nbsp;' (space+dash+space);</li>
+                <li>Only valid and complete ip4 addresses are allowed.</li>
               </ul>  
             </v-col>  
           </v-row>
           <v-row v-if="item.role == 'publisher'">
-            <v-col cols="12" sm="6" md="4">
-              <v-autocomplete v-model="item.irusIds" :items="publishers" multiple validate-on-blur
-                item-text="name" item-value="id" label="Publisher(s)" :rules="validation.publishers"/>
+            <v-col cols="12">
+              <v-autocomplete v-model="item.irusIds" :items="publishers" multiple validate-on-blur chips small-chips deletable-chips outlined filled 
+                item-text="name" item-value="id" label="Publisher(s)" :rules="validation.publishers">
+
+                <!-- show publisher along with irusUk id -->   
+                <template v-slot:item="data">
+                  <v-list-item-content>
+                    <v-list-item-title v-html="data.item.name"></v-list-item-title>
+                    <v-list-item-subtitle class="caption blue-grey--text text--lighten-3" v-html="'id: '+showSpace(data.item.id)"></v-list-item-subtitle>
+                  </v-list-item-content>                  
+                </template>  
+
+              </v-autocomplete>
             </v-col>  
           </v-row>  
           <v-row v-if="item.role == 'funder'">
-            <v-col cols="12" sm="6" md="4">
-              <v-autocomplete v-model="item.irusIds" :items="funders" multiple validate-on-blur
-                item-text="name" item-value="id" label="Funder(s)" :rules="validation.funders"/>
+            <v-col cols="12">
+              <v-autocomplete v-model="item.irusIds" :items="funders" multiple validate-on-blur chips small-chips deletable-chips outlined filled 
+                item-text="name" item-value="id" label="Funder(s)" :rules="validation.funders">
+
+                <!-- show funder along with irusUk id -->   
+                <template v-slot:item="data">
+                  <v-list-item-content>
+                    <v-list-item-title v-html="data.item.name"></v-list-item-title>
+                    <v-list-item-subtitle class="caption blue-grey--text text--lighten-3" v-html="'id: '+showSpace(data.item.id)"></v-list-item-subtitle>
+                  </v-list-item-content>                  
+                </template>  
+
+              </v-autocomplete>  
             </v-col>  
           </v-row>  
 
@@ -223,6 +243,7 @@
             v => this.validateGeo(v) || "Not a valid geo location"
           ],
           ipranges: [
+            v => !!v || 'Please provide at least one ip address range',
             v => this.validateIps(v) || "Ip ranges contain errors"
           ],
           publishers: [
@@ -237,6 +258,10 @@
     },
 
     methods: {
+
+      showSpace(val) {
+        return val.replace(/\s/gi,"_")
+      },
 
       cancel() {
         this.$emit('cancel')

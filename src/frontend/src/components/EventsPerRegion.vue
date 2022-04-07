@@ -44,7 +44,7 @@ export default {
   computed: {
 
     mapTitle() {
-       return `Yearly requests until ${this.month}` 
+       return `Year total requests up to ${this.month}` 
     },
 
     zoom(){  

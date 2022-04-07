@@ -20,7 +20,7 @@
       </v-col>
       <v-col cols="6" md="2">
           <v-select v-model="currentRadius" return-object :items="radii" 
-              item-text="text" item-value="value" label="Distance" />
+              item-text="text" item-value="value" label="Area radius" />
       </v-col>
 
       <v-spacer/>
@@ -104,11 +104,11 @@ export default {
   computed: {
 
     reportTitle() {
-      return `Number of successful title requests per month and title for library and region with distance ${this.currentRadius.value} km)`
+      return `Number of successful title requests per month and title for library and region (area radius ${this.currentRadius.value} km)`
     },
 
     chartTitle() {
-      return `Top ${Math.min(this.items.length,this.maxRows)} requests per title per month until ${this.currentMonth}` 
+      return `Top ${Math.min(this.items.length,this.maxRows)} requests per title per month up to ${this.currentMonth}` 
     },
   },
   
@@ -141,7 +141,7 @@ export default {
     getHeaders(json) {
 
       let arr = [
-        { text: "OAPEN link", value: "id" },
+        { text: "OAPEN id", value: "id" },
         { text: "Isbn", value: "isbn" },
         { text: "Title", value: "title", cellClass: "td-title" },
         { text: "Doi", value: "doi" },

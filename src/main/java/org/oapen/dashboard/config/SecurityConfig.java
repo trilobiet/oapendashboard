@@ -35,8 +35,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		
 		auth
 			.userDetailsService(uds)
-			//.passwordEncoder(NoOpPasswordEncoder.getInstance()); // TODO
-			.passwordEncoder(new BCryptPasswordEncoder()); // TODO
+			.passwordEncoder(new BCryptPasswordEncoder()); 
 		
 		System.out.println("UDS " + uds);
 		
