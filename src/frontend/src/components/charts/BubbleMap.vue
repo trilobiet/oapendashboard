@@ -95,15 +95,20 @@ export default {
     };
   },
 
-  updated: function() {
+  updated: function() { // maybe use 'updated' hook?
 
-    this.maxWeight = this.points.reduce((m, p) => Math.max(m, p.size), 0)
-    this.scalingFactor = this.circleSizePixels / Math.sqrt(this.maxWeight)
-    console.log(`MAXWEIGHT: ${this.maxWeight}, SCALING: ${this.scalingFactor}`)
-    // data changed, redraw 
-    this.$refs.clusterRef.mapObject.refreshClusters()
-    // data changed, re-center
-    this.$refs.mapRef.mapObject.panTo(this.centerLocation)
+    this.$nextTick(() => {
+
+      console.log(`update on nextTick`)
+      this.maxWeight = this.points.reduce((m, p) => Math.max(m, p.size), 0)
+      this.scalingFactor = this.circleSizePixels / Math.sqrt(this.maxWeight)
+      console.log(`MAXWEIGHT: ${this.maxWeight}, SCALING: ${this.scalingFactor}`)
+      // data changed, redraw 
+      this.$refs.clusterRef.mapObject.refreshClusters()
+      // data changed, re-center
+      this.$refs.mapRef.mapObject.panTo(this.centerLocation)
+
+    })  
   },
 
   methods: {

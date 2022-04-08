@@ -87,6 +87,7 @@ export default {
 
 <style lang="scss">
 
+  // application wide v-data-table styling
   .v-data-table {
 
     th {
@@ -100,13 +101,14 @@ export default {
       }  
     }
     td {
-      white-space: nowrap;
-      max-width: 15em;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      &.td-title {
-         max-width: 25em; 
-      }
+      @media (min-width:600px) {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        &.td-title {
+          max-width: 25em; 
+        }
+      }  
     }
   }
 

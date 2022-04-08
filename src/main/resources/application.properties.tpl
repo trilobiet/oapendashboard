@@ -23,3 +23,5 @@ logging.level.org.springframework.jdbc.core.JdbcTemplate=info
 
 # spring.jpa.show-sql=true
 # spring.jpa.properties.hibernate.format_sql=true
+
+logging.file.name=spring-boot-dashboard.log

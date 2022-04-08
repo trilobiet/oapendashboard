@@ -16,10 +16,23 @@ You may need to unlock the ehcache directory at
 
 Installation:
 =============
-Restart service after installation (=copy jar to deployment)
+As user oapen:
+--------------
+
+Copy jar to deployment path /home/oapen
+
+Update symlink:
+- rm irus-dashboard.jar
+- ln -s irus-dashboard-0.1.2.jar irus-dashboard.jar
+
+As root:
+--------
+
+Restart service after installation
 
 - systemctl stop irus-dashboard.service
 - systemctl start irus-dashboard.service
 
 logs can be found in 
 /var/log/irus-dashboard.log
+

@@ -22,13 +22,12 @@
             :footer-props="{'items-per-page-options': [10, 25, 50, 100, -1]}"
             calculate-widths>
 
-            <!-- if there is an oapen id, make it a linbk to the library -->
+            <!-- if there is an oapen id, make it a link to the library -->
             <template v-slot:item.id="{ item }">
-                <a :href="`https://library.oapen.org/handle/${item.id}`" target="oapen_library">
+                <a :href="`https://library.oapen.org/handle/${item.id}`" target="oapen_library" style="display:inline-block">
                   {{ item.id }}
                   <v-icon x-small>mdi-open-in-new</v-icon>
                 </a>
-                
             </template>
 
           </v-data-table>  
@@ -59,20 +58,25 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 
   a {
     text-decoration: none;
     color: navy;
   }
 
-  a .v-icon {
-    opacity: 0;  
-    transition: opacity 500ms;
-  }
+  // except on very small devices, where tables become a list,
+  // we want to hide the link icon
+  @media (min-width:600px) {
 
-  .v-data-table tr:hover .v-icon {
-    opacity: 1;  
+    a .v-icon {
+      opacity: 0;  
+      transition: opacity 500ms;
+    }
+
+    .v-data-table tr:hover .v-icon {
+      opacity: 1;  
+    }  
   }  
 
 </style>
