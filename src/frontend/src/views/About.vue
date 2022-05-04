@@ -8,35 +8,138 @@
 
           <v-row>
 
-            <v-col cols="12" md="8" class="pa-12">
+            <v-col cols="12" lg="8" class="pa-12">
 
-              <h2 class="pb-8">How to use this dashboard</h2>
+              <h1>How to use this dashboard</h1>
 
               <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse volutpat elit in metus porttitor vehicula. Pellentesque sit amet ligula nibh. In aliquet tempus eros eu ultricies. Pellentesque eget eleifend turpis. Suspendisse blandit suscipit lectus. Vestibulum suscipit quam et dapibus auctor. Cras lorem nunc, accumsan nec facilisis ut, porttitor nec turpis. Cras dui urna, tempus quis elementum in, suscipit eu justo. Ut quis luctus est. Phasellus aliquet convallis auctor. Ut suscipit ligula non ligula laoreet bibendum. Proin arcu odio, facilisis ut vehicula ut, gravida non arcu. Pellentesque fermentum gravida mi, fermentum convallis leo lobortis at.
+                The OAPEN dashboard offers two views:
+              </p>
+              
+              <ol>
+                <li>Title based</li>
+                <li>Location based</li>
+              </ol>  
+
+              <p>
+                The view shows the data of twelve months. By selecting the 'end month' it is possible to investigate another time period. Furthermore, the data can be filtered in several ways.
               </p>
 
               <p>
-                Maecenas pulvinar velit ut erat fringilla accumsan. Ut efficitur dui justo. Maecenas ultricies arcu nec sollicitudin feugiat. Etiam tempor purus diam, in euismod quam auctor in. Pellentesque ultrices rhoncus sagittis. Mauris vel mi nec purus mollis vehicula id et lorem. Etiam sit amet massa sodales, suscipit massa quis, molestie ligula. Suspendisse id eros eu est molestie fermentum. Morbi tincidunt ligula id dui varius, non sollicitudin tortor laoreet. Vivamus blandit orci lectus, sed tristique libero vehicula non. Aliquam erat volutpat. Ut accumsan augue et quam luctus lacinia. Praesent faucibus lacus in justo aliquet feugiat vitae non arcu.
+                Select the view with the menu in the top left corner. 
+                <v-img src="../assets/page-about/view_selection.png" transition="scale-transition" contain width="282" class="content-image"/>
+              </p>
+              <p>  
+                The selected data can be exported to a CSV (Comma Separated Values) text file, allowing further analysis.
               </p>
 
+              <h3>1.1 Title based view</h3>
+
               <p>
-                Donec risus nisi, aliquam id fringilla eu, dignissim vitae nisl. Pellentesque imperdiet mattis blandit. Fusce finibus interdum diam, feugiat sagittis arcu ultrices id. Cras sit amet dui mauris. Nunc non neque a diam rhoncus euismod mattis at ipsum. Suspendisse ac nibh vitae tellus ornare commodo. Nullam in scelerisque lorem, mattis tristique massa. Ut justo elit, dictum et est id, vestibulum finibus libero. Etiam ultricies a massa at commodo. Nunc feugiat lorem vel metus imperdiet, eget scelerisque enim iaculis. Donec sed vulputate ante. Donec fermentum augue eu pharetra convallis. Proin dignissim ultricies nisl sed blandit. Vestibulum nunc magna, scelerisque ut purus eu, viverra feugiat ligula. 
+                The title based view displays the number of downloads for each title. It shows the filter options, below that the list of titles and below that, a bar chart of the 25 most downloaded titles.
               </p>
+
+              <h4>1.1.1 Filter options for publishers</h4>
+
+              <p>
+                A publisher can filter the data on:
+              </p>
+
+              <ul>
+                <li>Time period: end month</li>
+                <li>Country</li>
+                <li>Funder</li>
+                <li>Publication type: book or book segment</li>
+              </ul>
+
+              <p><v-img src="../assets/page-about/filter_publisher.png" transition="scale-transition" contain width="910" class="content-image"/></p>    
+
+
+              <h4>1.1.2 Filter options for funders</h4>
+
+              <p>
+                A funder can filter the data on:
+              </p>
+
+              <ul>
+                <li>Time period: end month</li>
+                <li>Country</li>
+                <li>Publisher</li>
+                <li>Publication type: book or book segment</li>
+              </ul>
+
+              <p><v-img src="../assets/page-about/filter_funder.png" transition="scale-transition" contain width="910" class="content-image"/></p>    
+
+
+              <h4>1.1.3 Filter options for libraries</h4>
+
+              <p>
+                A library can filter the data on:
+              </p>
+
+              <ul>
+                <li>Time period: end month</li>
+                <li>Funder</li>
+                <li>Publisher</li>
+                <li>Publication type: book or book segment</li>
+              </ul>
+
+              <p><v-img src="../assets/page-about/filter_library.png" transition="scale-transition" contain width="910" class="content-image"/></p>    
+
+
+              <h4>1.1.4 Bar chart</h4>
+
+              <p>
+                The bar chart displays the 25 most downloaded titles, based on the selection. Use the menu at the top right corner to export the bar chart to an image file or to export the data to a CSV (Comma Separated Values) text file.                  
+                <v-img src="../assets/page-about/bar_chart.png" transition="scale-transition" contain width="910" class="content-image"/>
+              </p>  
+
+
+              <h3>Location based view</h3>
+
+              <p>
+                The location based view displays the downloads based on regions. For publishers and funders, this view shows the filter options, below that the list of countries and downloads and below that, a map and a bar chart of the 25 most downloaded titles. 
+              </p>
+              <p>  
+                For libraries, the view shows the filter options, below that the downloads originating from an area around the library building, and below that, a map and a bar chart of the 25 most downloaded titles. The filter options allow the selection of a larger or smaller area.
+                <v-img src="../assets/page-about/filter_library_radius.png" transition="scale-transition" contain width="910" class="content-image"/>
+              </p>  
+
+
+              <h2>2 Downloading data</h2>  
+
+              <p>
+                The data can be exported to a CSV (Comma Separated Values) text file in UTF-8 format. The data to be downloaded depends on the selection you have made using the filter options.
+              </p>
+              <p>  
+                To export the data, click on the download button.
+                <v-img src="../assets/page-about/download_button.png" transition="scale-transition" contain width="120" class="content-image"/>
+              </p>  
+              <p>
+                Please keep in mind that programs such as MS Excel might need a specific configuration to import the data. Consult your IT department if necessary.
+              </p>  
 
             </v-col>  
 
-            <v-col cols="12" md="4" class="pa-12">
+            <v-col cols="12" lg="4" class="pa-12 oapen-about-sidebar">
 
-              <h3 class="pb-8">About this dashboard</h3>
+              <h1>About the OAPEN dashboard</h1>
   
               <p>
-                Curabitur facilisis, felis vitae cursus tempor, orci erat placerat dui, ut dictum libero lacus quis ante. Praesent at orci iaculis, aliquam lacus at, maximus risus. Sed viverra velit eu dapibus tempus. Ut at eros et eros maximus porta sit amet ac justo. Interdum et malesuada fames ac ante ipsum primis in faucibus. Proin a ipsum dictum, rhoncus dolor nec, auctor magna. Proin arcu mauris, venenatis non odio ut, congue mollis orci. Quisque tincidunt felis a justo vestibulum, et posuere lorem dignissim. In in elit tempor, rhoncus nulla vel, tincidunt ante. Vestibulum imperdiet bibendum nibh, vitae accumsan erat rutrum ut. Suspendisse faucibus congue auctor. Fusce leo felis, dapibus at odio at, gravida consectetur augue.
+                The goal of the OAPEN Dashboard is to provide COUNTER conformant usage statistics to publishers, funders and libraries. Each of these organisation types has different needs, and the dashboard reflects that. Once the dashboard has been set up for your organisation, it allows the members of your organisation to continuously check and download your usage data. The data is automatically updated monthly. The dashboard has been secured and each organisation receives only one user name and password.
               </p>
 
               <p>
-                Aenean gravida ante vitae massa tincidunt feugiat. Fusce leo elit, euismod vitae interdum nec, aliquam nec tortor. Mauris convallis porta quam vel tempor. Phasellus non porta ligula. Etiam commodo consequat placerat. Cras sodales lorem velit, sed eleifend erat tempus vel. Pellentesque nec laoreet nunc. Suspendisse sed tellus volutpat, luctus tortor ac, volutpat ligula. Quisque eu commodo felis. Duis faucibus fermentum tempor. Vestibulum eget sem non ex aliquet rutrum. Interdum et malesuada fames ac ante ipsum primis in faucibus. Vestibulum hendrerit ligula facilisis, vestibulum leo lobortis, auctor nibh. Duis id lorem mollis, hendrerit odio in, vestibulum magna. 
+                All data is COUNTER conformant and is based on Release 5 of the COUNTER Code of Practice. This provides you with comparable, authoritative, standards-based data. The metric used is Total_Item_Requests.;  it counts the total number of views of a full content item, e.g. downloading a PDF.
               </p>
+
+              <p>
+                The usage data is provided by IRUS-UK. As part of the COUNTER processing, IRUS filters out usage by known robots using both the COUNTER robots list and an additional IRUS robots list. Requests to download an item where the mouse is clicked twice within thirty seconds are designated as "double clicks" and only counted as one request.
+              </p>
+
+              <p>
+                The dashboard contains usage data obtained from April 2020 onwards.
+              </p>  
 
             </v-col>  
 
@@ -49,3 +152,38 @@
   </div>
 
 </template>
+
+
+<style lang="scss" scoped>
+  
+  h1,h2,h3,h4,h5,h6 {
+    margin: 3em 0 .5rem;
+  }
+
+  h1:first-child,
+  h2:first-child,
+  h3:first-child {
+    margin-top: 0;
+  }
+
+  h1 {
+    border-bottom: solid 1px #ccc;
+  }
+
+  ul, ol {
+    margin: 1em 0;
+  }
+
+  .content-image {
+    margin: 2rem 0;
+  }
+
+  .oapen-about-sidebar {
+    background: #f3f3f3; 
+
+    p {
+      text-align:justify;
+    }
+  }
+
+</style>

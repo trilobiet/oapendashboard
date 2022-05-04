@@ -7,7 +7,7 @@ For production:
 mvn clean install -Pprod
 
 For local deployment:
-mvn clean install -Pprod
+mvn clean install -Pdev
 
 You may need to unlock the ehcache directory at 
 /tmp/ehcache/oapendashboard 
@@ -21,14 +21,14 @@ As user oapen:
 
 Copy jar to deployment path /home/oapen
 
-Update symlink:
+Update symlink (user oapen):
 - rm irus-dashboard.jar
-- ln -s irus-dashboard-0.1.2.jar irus-dashboard.jar
+- ln -s irus-dashboard-0.1.2.jar irus-dashboard.jar 
 
 As root:
 --------
 
-Restart service after installation
+Restart service after installation (user root)
 
 - systemctl stop irus-dashboard.service
 - systemctl start irus-dashboard.service

@@ -1,0 +1,16 @@
+
+See "Full Stack Java development with Spring Boot and VueJS"
+  
+https://www.danvega.dev/blog/2021/01/22/full-stack-java-vue/
+
+Startup Visual Studio Code for vue.js development
+
+Goto oapendashboard/src/frontend in terminal and type
+
+	npm run serve
+	
+Now login via http://localhost:8081
+Then switch to http://localhost:3000
+
+Now you can edit vue files and see the changes immediately in action.	 
+ 
