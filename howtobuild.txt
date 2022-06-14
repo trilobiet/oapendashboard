@@ -13,6 +13,9 @@ You may need to unlock the ehcache directory at
 /tmp/ehcache/oapendashboard 
 (throw away .lock)
 
+Check: run ./irus-dashboard-x.y.z.jar from the target directory
+and look for the line 'The following profiles are active: prod'.  
+
 
 Installation:
 =============

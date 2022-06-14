@@ -95,7 +95,7 @@
               </p>  
 
 
-              <h3>Location based view</h3>
+              <h3>1.2 Location based view</h3>
 
               <p>
                 The location based view displays the downloads based on regions. For publishers and funders, this view shows the filter options, below that the list of countries and downloads and below that, a map and a bar chart of the 25 most downloaded titles. 
@@ -103,6 +103,13 @@
               <p>  
                 For libraries, the view shows the filter options, below that the downloads originating from an area around the library building, and below that, a map and a bar chart of the 25 most downloaded titles. The filter options allow the selection of a larger or smaller area.
                 <v-img src="../assets/page-about/filter_library_radius.png" transition="scale-transition" contain width="910" class="content-image"/>
+              </p>  
+
+              <h4>1.2.1 Search by title</h4>
+
+              <p>
+                When you search by title, use at least 4 characters.
+                <v-img src="../assets/page-about/filter_title.png" transition="scale-transition" contain width="910" class="content-image"/>
               </p>  
 
 

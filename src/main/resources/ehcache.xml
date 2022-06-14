@@ -26,7 +26,7 @@
 		<key-type>java.lang.String</key-type>
 		<value-type>java.lang.Object</value-type>
 		<expiry>
-			<ttl unit="days">30</ttl>
+			<ttl unit="days">5</ttl>
 		</expiry>
 		<resources>
 			<heap unit="entries">2000</heap>
@@ -38,7 +38,7 @@
 		<key-type>org.oapen.dashboard.api.repository.EventCountPerRegionArguments</key-type>
 		<value-type>java.util.List</value-type>
 		<expiry>
-			<ttl unit="days">30</ttl>
+			<ttl unit="days">5</ttl>
 		</expiry>
 		<resources>
 			<disk unit="MB" persistent="true">100</disk>
@@ -50,7 +50,7 @@
 		</key-type>
 		<value-type>java.util.List</value-type>
 		<expiry>
-			<ttl unit="days">30</ttl>
+			<ttl unit="days">5</ttl>
 		</expiry>
 		<!-- <listeners> <listener> <class>org.oapen.dashboard.repository.CacheEventLogger</class> 
 			<event-firing-mode>ASYNCHRONOUS</event-firing-mode> <event-ordering-mode>UNORDERED</event-ordering-mode> 
@@ -66,7 +66,7 @@
 		</key-type>
 		<value-type>java.util.List</value-type>
 		<expiry>
-			<ttl unit="days">30</ttl>
+			<ttl unit="days">5</ttl>
 		</expiry>
 		<resources>
 			<disk unit="MB" persistent="true">100</disk>

@@ -94,7 +94,7 @@ public class LookupRepository {
 	}
 	
 	
-	@Cacheable(value="lookupCache", key="#root.methodName")
+	@Cacheable(value="lookupCacheDaily", key="#root.methodName")
 	public YearMonth lastAvailableMonth() {
 		
 		LocalDate date = jdbcTemplate.queryForObject(
@@ -106,7 +106,7 @@ public class LookupRepository {
 	}
 	
 
-	@Cacheable(value="lookupCache", key="#root.methodName")
+	@Cacheable(value="lookupCacheDaily", key="#root.methodName")
 	public List<YearMonth> availableMonths() {
 		
 		List<LocalDate> lst = jdbcTemplate.queryForList(
