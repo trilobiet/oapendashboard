@@ -70,6 +70,6 @@ BEGIN
 	group by id
 	having total is not null
 	order by total desc
-    limit 1000;
+    limit 2500;
 
 END
