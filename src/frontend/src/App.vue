@@ -54,7 +54,7 @@
 
     </v-main>
 
-    <site-footer/>
+    <site-footer/><span style="display:none">test</span>
 
   </v-app>
 

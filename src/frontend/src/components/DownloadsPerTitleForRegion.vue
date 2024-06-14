@@ -94,8 +94,7 @@ export default {
         {value:20, text:"20 km"},
         {value:50, text:"50 km"},
         {value:100, text:"100 km"},
-        {value:250, text:"250 km"},
-        {value:500, text:"500 km"}
+        {value:200, text:"200 km"}
       ],      
       currentRadius:{value:this.radius, text:"50 km"}
     }    

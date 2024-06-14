@@ -20,6 +20,7 @@
       </v-col>
 
       <v-spacer/>
+
       <v-col md="2" class="text-right">
 
           <vue-json-to-csv :json-data="$func.flattenJsonArray(this.items)" csv-title="monthly_requests_for_library">
@@ -37,7 +38,10 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <my-data-table :headers="headers" :items="items" :loading="loading" :report-title="reportTitle" />
+        <my-data-table :headers="headers" :items="items" :loading="loading" :report-title="reportTitle" 
+         :nodata="'No data available. Try reloading at a later time.'" 
+         @request-reload-data="callApi" :isReloadable="reloadable"
+        />
       </v-col>
     </v-row>
   </v-container>
@@ -80,6 +84,7 @@ export default {
       currentPublisherFilter: {name:"",id:""},
       currentItemId: "",
       reportTitle: 'Number of successful title requests per month and title for library (on site)',
+      reloadable: false
     }    
   },
 
@@ -106,14 +111,19 @@ export default {
     
     callApi() {
 
+      this.reloadable = false
+
       this.loading = true; // visual darkening while loading  
       axios.get(`/api/eventcount-per-item-library?${this.getRequestString()}`)
       .then(resp => {
          this.items=resp.data;
          this.headers=this.getHeaders(resp.data);
       })
-      .catch(error => console.log(error))
-      .finally(() => this.loading = false )
+      .catch(error => {
+        setTimeout(() => this.reloadable = true, 60000);
+        console.log(error)
+      })
+      .finally(() => {this.loading = false} )
     },
     
     getHeaders(json) {

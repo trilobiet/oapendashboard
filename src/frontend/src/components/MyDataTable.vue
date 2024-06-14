@@ -18,7 +18,7 @@
         <v-card-text> 
           <v-data-table 
             :loading="loading" :loading-text="loadingText" :search="tableSearch" 
-            :headers="headers" :items="items"   
+            :headers="headers" :items="items" :noDataText="nodata"
             :footer-props="{'items-per-page-options': [10, 25, 50, 100, -1]}"
             calculate-widths>
 
@@ -30,9 +30,21 @@
                 </a>
             </template>
 
+            <template v-if="nodata" v-slot:no-data>
+              {{nodata}}
+              
+              <div class="my-2 blue--text" style="cursor:pointer" @click="reloadData()" v-if="isReloadable">
+                <v-icon color="blue">mdi-database-refresh</v-icon> Click to retry 
+              </div>
+              <div class="my-2 grey--text" v-else>
+                <v-icon color="grey">mdi-database-refresh</v-icon> Click to retry (please wait...)
+              </div>
+            </template>
+
           </v-data-table>  
         </v-card-text>
-    </v-card>    
+    </v-card>   
+    
 
 </template>
 
@@ -46,7 +58,10 @@ export default {
     items: {type: Array},     
     loading: {type: Boolean, default: false},
     reportTitle: {type: String},
-    subTitle:  {type: String, default: ""}
+    subTitle:  {type: String, default: ""},
+    //nodata: {type: String, default: "Currently no data available"},
+    nodata: {type: String},
+    isReloadable: {type: Boolean, default: false}
   },
 
   data() {
@@ -54,7 +69,17 @@ export default {
       tableSearch: '',
       loadingText: 'Loading... (preparing new reports may take up to a few minutes)'
     }
-  }  
+  },
+  
+  methods: {
+
+    reloadData() {
+      /* a custom event that is attached on the parent my-data-table tag 
+      via attribute @request-reload-data='[someFunction()]' */
+      this.$emit('request-reload-data')
+    }
+  }
+
 }
 </script>
 

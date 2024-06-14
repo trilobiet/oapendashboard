@@ -10,12 +10,15 @@ import javax.validation.constraints.Min;
 import org.oapen.dashboard.api.entities.Event;
 import org.oapen.dashboard.api.entities.EventMonthlyCountsPerCountryRow;
 import org.oapen.dashboard.api.entities.EventMonthlyCountsPerItemRow;
+import org.oapen.dashboard.api.repository.CacheEventLogger;
 import org.oapen.dashboard.api.repository.EventCountPerRegionArguments;
 import org.oapen.dashboard.api.repository.EventCountPerRegionArguments.EventCountPerRegionArgumentsBuilder;
 import org.oapen.dashboard.api.repository.EventMonthlyCountsPerCountryArguments;
 import org.oapen.dashboard.api.repository.EventMonthlyCountsPerCountryArguments.EventMonthlyCountsPerCountryArgumentsBuilder;
 import org.oapen.dashboard.api.repository.EventMonthlyCountsPerItemArguments;
 import org.oapen.dashboard.api.repository.EventMonthlyCountsPerItemArguments.EventMonthlyCountsPerItemArgumentsBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.oapen.dashboard.api.repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -42,6 +45,9 @@ public class EventController {
 	@Autowired
     private EventRepository eventRepository;
 	
+	private static final Logger logger = 
+			LoggerFactory.getLogger(EventController.class);
+
 	
 	// Access checking
 	@PreAuthorize("@customPreAuthorizer.authorizeFunderOrPublisherForGlobalData(#publisherId,#funderId)")
@@ -147,7 +153,13 @@ public class EventController {
     	if (itemId.isPresent()) args.itemId(itemId.get());
     	if (itemType.isPresent()) args.itemType(itemType.get());
     	
-    	return eventRepository.getEventCountPerItemForLibrary(args.build());
+    	System.out.println("STARTING LIBRARY");
+    	
+    	List<EventMonthlyCountsPerItemRow> q = eventRepository.getEventCountPerItemForLibrary(args.build());
+    	
+    	logger.info("Event count per library (ip address matching) found " + q.size() + " for library " + libraryId);
+    	
+    	return q;
     }
     
     
